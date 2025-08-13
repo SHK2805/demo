@@ -91,6 +91,38 @@ class MarkdownExtractor:
     def get_title(file_path):
         return Path(file_path).stem
 
+
+import csv
+import os
+from pathlib import Path
+
+# ─────────────────────────────────────────────────────────────
+# 📊 REPORT WRITER MODULE
+# ─────────────────────────────────────────────────────────────
+
+class ReportWriter:
+    def __init__(self, zip_path, output_dir="reports"):
+        os.makedirs(output_dir, exist_ok=True)
+        zip_name = Path(zip_path).name
+        self.report_path = os.path.join(output_dir, f"{Path(zip_name).stem}_report.csv")
+        self.rows = []
+
+    def add_row(self, file_name, confluence_url, status, zip_name):
+        self.rows.append({
+            "File Name": file_name,
+            "Confluence URL": confluence_url,
+            "Status": status,
+            "Zip File": zip_name
+        })
+
+    def write(self):
+        with open(self.report_path, mode="w", newline='', encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=["File Name", "Confluence URL", "Status", "Zip File"])
+            writer.writeheader()
+            writer.writerows(self.rows)
+        return self.report_path
+
+
 # ─────────────────────────────────────────────────────────────
 # 🌐 CONFLUENCE INTEGRATION
 # ─────────────────────────────────────────────────────────────
