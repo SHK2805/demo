@@ -50,9 +50,14 @@ class Logger:
 # ─────────────────────────────────────────────────────────────
 
 class MarkdownExtractor:
-    def __init__(self, zip_path, extract_to):
+    def __init__(self, zip_path):
         self.zip_path = zip_path
-        self.extract_to = extract_to
+        self.extract_to = self._get_extract_folder()
+
+    def _get_extract_folder(self):
+        base_name = Path(self.zip_path).stem  # e.g., "usecases"
+        extract_folder = os.path.join(os.getcwd(), base_name)
+        return extract_folder
 
     def extract(self):
         if not os.path.isfile(self.zip_path):
