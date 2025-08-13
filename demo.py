@@ -1,13 +1,14 @@
-from atlassian import Confluence
 import os
 import zipfile
 import logging
 import re
 from pathlib import Path
-from dotenv import load_dotenv
 from datetime import datetime
+from dotenv import load_dotenv
+from atlassian import Confluence
+import markdown
 
-# Load environment variables
+# Load environment variables from .env file
 load_dotenv()
 
 def load_config():
@@ -20,8 +21,7 @@ def load_config():
     }
 
 def validate_config(config):
-    required_keys = config.keys()
-    missing = [key for key in required_keys if not config.get(key)]
+    missing = [key for key, value in config.items() if not value]
     if missing:
         raise ValueError(f"Missing config keys in .env: {', '.join(missing)}")
 
@@ -50,28 +50,18 @@ def extract_zip(zip_path, extract_to="unzipped_md"):
         zip_ref.extractall(extract_to)
     return extract_to
 
-def get_title_from_md(file_path):
-    with open(file_path, 'r', encoding='utf-8') as f:
-        for line in f:
-            match = re.match(r"# Use Case Title:\s*
-
-\[(.*?)\]
-
-", line)
-            if match:
-                return match.group(1)
-    return Path(file_path).stem  # fallback to filename
-
 def page_exists(confluence, space_key, title):
     page_id = confluence.get_page_id(space=space_key, title=title)
-    return page_id is not None
+    return page_id is not None, page_id
 
 def publish_to_confluence(confluence, config, title, content):
     try:
+        html_content = markdown.markdown(content)
+
         confluence.create_page(
             space=config["CONFLUENCE_SPACE"],
             title=title,
-            body=f"<ac:structured-macro ac:name='markdown'><ac:plain-text-body><![CDATA[{content}]]></ac:plain-text-body></ac:structured-macro>",
+            body=html_content,
             parent_id=config["PARENT_DOC"],
             representation="storage"
         )
@@ -106,11 +96,11 @@ def main():
             if file.endswith(".md"):
                 file_path = os.path.join(root, file)
                 try:
-                    title = get_title_from_md(file_path)
-                    title = os.path.splitext(title)[0]  # Remove .md if present
+                    title = os.path.splitext(file)[0]  # Use filename without .md
 
-                    if page_exists(confluence, config["CONFLUENCE_SPACE"], title):
-                        logging.info(f"Skipped (already exists): {title}")
+                    exists, page_id = page_exists(confluence, config["CONFLUENCE_SPACE"], title)
+                    if exists:
+                        logging.info(f"Skipped (already exists): {title} [Page ID: {page_id}]")
                         continue
 
                     with open(file_path, 'r', encoding='utf-8') as f:
