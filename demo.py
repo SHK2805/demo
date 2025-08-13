@@ -167,18 +167,52 @@ class ConfluenceAutomation:
         self.publisher = ConfluencePublisher(self.config)
 
     def run(self):
-        self.extractor.extract()
+    try:
+        extracted_folder = self.extractor.extract()
         md_files = self.extractor.get_md_files()
 
         for file_path in md_files:
+            file_name = Path(file_path).name
             title = self.extractor.get_title(file_path)
+            zip_name = Path(self.config.ZIP_FILE).name
+
             exists, page_id = self.publisher.page_exists(title)
             if exists:
+                url = f"{self.config.CONFLUENCE_SERVER}/pages/viewpage.action?pageId={page_id}"
+                self.report.add_row(file_name, url, "Already Exists", zip_name)
                 logging.info(f"Skipped (already exists): {title} [Page ID: {page_id}]")
                 continue
 
-            content = self.extractor.read_file(file_path)
-            self.publisher.publish(title, content)
+            try:
+                content = self.extractor.read_file(file_path)
+
+                # Wrap raw markdown using Confluence macro
+                markdown_macro = (
+                    "<ac:structured-macro ac:name='markdown'>"
+                    "<ac:plain-text-body><![CDATA["
+                    f"{content}"
+                    "]]></ac:plain-text-body></ac:structured-macro>"
+                )
+
+                success = self.publisher.publish(title, markdown_macro)
+                if success:
+                    page_id = self.publisher.client.get_page_id(self.config.CONFLUENCE_SPACE, title)
+                    url = f"{self.config.CONFLUENCE_SERVER}/pages/viewpage.action?pageId={page_id}"
+                    self.report.add_row(file_name, url, "Published", zip_name)
+                else:
+                    self.report.add_row(file_name, "", "Error", zip_name)
+            except Exception as e:
+                logging.error(f"Error processing {file_path}: {e}")
+                self.report.add_row(file_name, "", f"Error: {str(e)}", zip_name)
+
+        report_path = self.report.write()
+        logging.info(f"Report saved to: {report_path}")
+        print(f"CSV report generated: {report_path}")
+
+    except Exception as e:
+        logging.error(f"Fatal error in run(): {e}")
+        print(f"[ERROR] {e}")
+
 
 if __name__ == "__main__":
     try:
