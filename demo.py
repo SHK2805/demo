@@ -1,3 +1,4 @@
+// General query
 let targetSender = "worker@example.com";  // Replace with actual sender
 let targetDate = datetime(2025-09-02);    // Replace with your target date
 let emailEvents = EmailEvents
@@ -25,7 +26,7 @@ emailEvents
 | sort by Timestamp desc
 
 
-           -----
+// Alert details if we know alert id
 let alertId = "your_alert_id_here";  // Replace with actual AlertId
 
 // Step 1: Get core alert metadata
@@ -66,4 +67,33 @@ alertDetails
           FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName,
           RemoteIP, RemotePort, RemoteUrl, AttackTechniques
 | sort by Timestamp desc
+
+// look for alerts if we know device, file and time
+let startTime = datetime(2025-09-02 10:00:00);  // Adjust as needed
+let endTime = datetime_add("minute", 30, startTime);  // 30-minute window
+
+AlertInfo
+| where Timestamp between (startTime .. endTime)
+| where DeviceName =~ "host1"  // Replace with your actual device name
+| project AlertId, Title, Severity, Category, Timestamp, DeviceName
+
+AlertEvidence
+| where FileName =~ "WebAssemblyDownload.zip"  // Replace with your actual file name
+| where DeviceName =~ "host1"
+| project AlertId, FileName, SHA256, DeviceName, FolderPath, EvidenceRole, EntityType
+
+let startTime = datetime(2025-09-02 10:00:00);
+let endTime = datetime_add("minute", 30, startTime);
+
+let alerts = AlertInfo
+| where Timestamp between (startTime .. endTime)
+| where DeviceName =~ "host1"
+| project AlertId, Title, Severity, Category, Timestamp, DeviceName;
+
+AlertEvidence
+| where FileName =~ "WebAssemblyDownload.zip"
+| where DeviceName =~ "host1"
+| join kind=inner alerts on AlertId
+| project AlertId, Title, Severity, Category, Timestamp, DeviceName, FileName, SHA256, FolderPath, EvidenceRole
+                  
 
