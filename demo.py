@@ -1,99 +1,113 @@
-// General query
-let targetSender = "worker@example.com";  // Replace with actual sender
-let targetDate = datetime(2025-09-02);    // Replace with your target date
-let emailEvents = EmailEvents
-    | where SenderFromAddress =~ targetSender
-    | where Timestamp between (targetDate .. targetDate + 1d)
-    | project ReportId, NetworkMessageId, EmailSubject=Subject, SenderFromAddress, RecipientEmailAddress, Timestamp, ThreatTypes, DeliveryAction;
-let attachments = EmailAttachmentInfo
-    | project NetworkMessageId, AttachmentName=FileName, FileType, SHA256, MalwareDetectionName;
-let urls = EmailUrlInfo
-    | project NetworkMessageId, Url, UrlDomain, UrlClickAction;
-let clicks = UrlClickEvents
-    | project NetworkMessageId, ClickTimestamp=ClickDateTime, ClickedUrl=Url, ClickedBy=UserPrincipalName, DeviceName;
-let executions = DeviceFileEvents
-    | project SHA256, ExecutionTimestamp=Timestamp, ExecutedOn=DeviceName, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine;
+// =============================================
+// Tunables
+// =============================================
+let timeWindow = 4h;                          // Lookback around the alert
+let maxRareThreshold = 3;                     // Max occurrences allowed to still consider "rare"
+let alertIdSeed = "PUT-YOUR-ALERT-ID-HERE";   // Replace with your actual AlertId
 
-emailEvents
-| join kind=leftouter attachments on NetworkMessageId
-| join kind=leftouter urls on NetworkMessageId
-| join kind=leftouter clicks on NetworkMessageId
-| join kind=leftouter executions on SHA256
-| project Timestamp, SenderFromAddress, RecipientEmailAddress, EmailSubject, ThreatTypes, DeliveryAction,
-          AttachmentName, FileType, MalwareDetectionName,
-          Url, UrlDomain, UrlClickAction, ClickTimestamp, ClickedBy, DeviceName,
-          ExecutionTimestamp, ExecutedOn, FileName, FolderPath, InitiatingProcessFileName, InitiatingProcessCommandLine
-| sort by Timestamp desc
+// =============================================
+// Stage 1 - Pull the alert and evidence
+// =============================================
+let seedAlert =
+    SecurityAlert
+    | where AlertId == alertIdSeed
+    | project AlertId, Title, Severity, VendorName, ProductName, TimeGenerated;
 
+let ev =
+    AlertEvidence
+    | where AlertId == alertIdSeed
+    | project AlertId, Timestamp, DeviceId, DeviceName, AccountDomain, AccountName,
+              FileName, FilePath, ProcessCommandLine, Sha1, Sha256,
+              RemoteUrl, RemoteIP, RemotePort, EvidenceRole, EvidenceType;
 
-// Alert details if we know alert id
-let alertId = "your_alert_id_here";  // Replace with actual AlertId
+// =============================================
+// Stage 2 - Enrich with process, network, file, logon context
+// =============================================
 
-// Step 1: Get core alert metadata
-let alertDetails = AlertInfo
-| where AlertId == alertId
-| project AlertId, Title, Category, Severity, DetectionSource, ServiceSource, Timestamp, AttackTechniques;
+// Process context
+let procCtx =
+    DeviceProcessEvents
+    | where Timestamp between (ago(timeWindow) .. now())
+    | where DeviceName in (ev | project DeviceName)
+    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine,
+              InitiatingProcessParentFileName, InitiatingProcessParentCommandLine, FileName, FolderPath, SHA1, SHA256;
 
-// Step 2: Get all evidence tied to the alert
-let evidence = AlertEvidence
-| where AlertId == alertId
-| project AlertId, EntityType, EvidenceRole, FileName, FolderPath, SHA256, DeviceName, AccountName, RemoteIP, RemoteUrl;
+// Network context
+let netCtx =
+    DeviceNetworkEvents
+    | where Timestamp between (ago(timeWindow) .. now())
+    | where DeviceName in (ev | project DeviceName)
+    | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine,
+              LocalIP, LocalPort, RemoteIP, RemotePort, Protocol, Action;
 
-// Step 3: Trace process execution from evidence
-let processEvents = DeviceProcessEvents
-| where Timestamp > ago(7d)
-| where FileName in (evidence | where EntityType == "File" | project FileName)
-| project Timestamp, DeviceName, FileName, ProcessCommandLine, InitiatingProcessFileName, InitiatingProcessCommandLine;
+// File context
+let fileCtx =
+    DeviceFileEvents
+    | where Timestamp between (ago(timeWindow) .. now())
+    | where DeviceName in (ev | project DeviceName)
+    | project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessCommandLine;
 
-// Step 4: Trace file activity from evidence
-let fileEvents = DeviceFileEvents
-| where Timestamp > ago(7d)
-| where SHA256 in (evidence | where EntityType == "File" | project SHA256)
-| project Timestamp, DeviceName, FileName, FolderPath, SHA256, ActionType, InitiatingProcessFileName;
+// Logon context
+let logonCtx =
+    DeviceLogonEvents
+    | where Timestamp between (ago(timeWindow) .. now())
+    | where DeviceName in (ev | project DeviceName)
+    | project Timestamp, DeviceName, AccountDomain, AccountName, LogonType, LogonSucceeded;
 
-// Step 5: Trace network activity from evidence
-let networkEvents = DeviceNetworkEvents
-| where Timestamp > ago(7d)
-| where RemoteIP in (evidence | where EntityType == "IpAddress" | project RemoteIP)
-| project Timestamp, DeviceName, RemoteIP, RemotePort, InitiatingProcessFileName, InitiatingProcessCommandLine;
+// =============================================
+// Stage 3 - Behavioral funnels for lateral movement
+// =============================================
 
-// Combine all views
-alertDetails
-| join kind=leftouter evidence on AlertId
-| join kind=leftouter processEvents on DeviceName
-| join kind=leftouter fileEvents on DeviceName
-| join kind=leftouter networkEvents on DeviceName
-| project Timestamp, AlertId, Title, Severity, DeviceName, AccountName,
-          FileName, FolderPath, SHA256, ProcessCommandLine, InitiatingProcessFileName,
-          RemoteIP, RemotePort, RemoteUrl, AttackTechniques
-| sort by Timestamp desc
+// Service execution / remote service control
+let svcExec =
+    procCtx
+    | extend cmdLower = tolower(InitiatingProcessCommandLine)
+    | where cmdLower contains "\\\\"
+        and (cmdLower has_any ("sc ", "create", "start", "config", "psexec"))
+    | summarize Occurrences = count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp)
+      by DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine
+    | where Occurrences <= maxRareThreshold;
 
-// look for alerts if we know device, file and time
-let startTime = datetime(2025-09-02 10:00:00);  // Adjust as needed
-let endTime = datetime_add("minute", 30, startTime);  // 30-minute window
+// RDP chains
+let rdpChains =
+    logonCtx
+    | where LogonType in ("RemoteInteractive","Network")
+    | project Account = strcat(AccountDomain, "\\", AccountName), DeviceName, Timestamp
+    | join kind=inner (
+        logonCtx
+        | where LogonType == "RemoteInteractive"
+        | project Account = strcat(AccountDomain, "\\", AccountName), DeviceName, Timestamp
+    ) on Account
+    | where $left.DeviceName != $right.DeviceName
+      and abs(datetime_diff("minute", $left.Timestamp, $right.Timestamp)) <= 30
+    | summarize Occurrences=count(),
+                FirstSeen=min($left.Timestamp),
+                LastSeen=max($right.Timestamp),
+                SourceDevices=make_set($left.DeviceName, 5),
+                TargetDevices=make_set($right.DeviceName, 5)
+      by Account
+    | where Occurrences <= maxRareThreshold;
 
-AlertInfo
-| where Timestamp between (startTime .. endTime)
-| where DeviceName =~ "host1"  // Replace with your actual device name
-| project AlertId, Title, Severity, Category, Timestamp, DeviceName
+// SOCKS tunneling indicators
+let socksPivot =
+    netCtx
+    | extend portsOfInterest = iff(RemotePort in (1080,8080,9050) or LocalPort in (1080,8080,9050), 1, 0)
+    | extend cmdLower = tolower(InitiatingProcessCommandLine)
+    | where portsOfInterest == 1 or cmdLower has_any ("socks","proxychains"," -d "," -D ")
+    | summarize Occurrences=count(), FirstSeen=min(Timestamp), LastSeen=max(Timestamp),
+                Examples=make_set(InitiatingProcessCommandLine, 5)
+      by DeviceName
+    | where Occurrences <= maxRareThreshold;
 
-AlertEvidence
-| where FileName =~ "WebAssemblyDownload.zip"  // Replace with your actual file name
-| where DeviceName =~ "host1"
-| project AlertId, FileName, SHA256, DeviceName, FolderPath, EvidenceRole, EntityType
-
-let startTime = datetime(2025-09-02 10:00:00);
-let endTime = datetime_add("minute", 30, startTime);
-
-let alerts = AlertInfo
-| where Timestamp between (startTime .. endTime)
-| where DeviceName =~ "host1"
-| project AlertId, Title, Severity, Category, Timestamp, DeviceName;
-
-AlertEvidence
-| where FileName =~ "WebAssemblyDownload.zip"
-| where DeviceName =~ "host1"
-| join kind=inner alerts on AlertId
-| project AlertId, Title, Severity, Category, Timestamp, DeviceName, FileName, SHA256, FolderPath, EvidenceRole
-                  
-
+// =============================================
+// Final union and output
+// =============================================
+svcExec
+| extend Signal="ServiceExec"
+| union (rdpChains | extend Signal="RDP Chain")
+| union (socksPivot | extend Signal="SOCKS/Proxy")
+| join kind=leftouter seedAlert on $left.DeviceName == $right.ProductName
+| project AlertId, Title, Severity, TimeGenerated,
+          Signal, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine,
+          Occurrences, FirstSeen, LastSeen
+| order by LastSeen desc
