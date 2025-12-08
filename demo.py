@@ -1,8 +1,8 @@
 // =============================================
 // Tunables
 // =============================================
-let timeWindow = 4h;                          // Lookback around the alert
-let maxRareThreshold = 3;                     // Max occurrences allowed to still consider "rare"
+let timeWindow = 4h;
+let maxRareThreshold = 3;
 let alertIdSeed = "PUT-YOUR-ALERT-ID-HERE";   // Replace with your actual AlertId
 
 // =============================================
@@ -28,7 +28,7 @@ let ev =
 let procCtx =
     DeviceProcessEvents
     | where Timestamp between (ago(timeWindow) .. now())
-    | where DeviceName in (ev | project DeviceName)
+    | join kind=inner (ev | project DeviceName) on DeviceName
     | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine,
               InitiatingProcessParentFileName, InitiatingProcessParentCommandLine, FileName, FolderPath, SHA1, SHA256;
 
@@ -36,7 +36,7 @@ let procCtx =
 let netCtx =
     DeviceNetworkEvents
     | where Timestamp between (ago(timeWindow) .. now())
-    | where DeviceName in (ev | project DeviceName)
+    | join kind=inner (ev | project DeviceName) on DeviceName
     | project Timestamp, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine,
               LocalIP, LocalPort, RemoteIP, RemotePort, Protocol, Action;
 
@@ -44,14 +44,14 @@ let netCtx =
 let fileCtx =
     DeviceFileEvents
     | where Timestamp between (ago(timeWindow) .. now())
-    | where DeviceName in (ev | project DeviceName)
+    | join kind=inner (ev | project DeviceName) on DeviceName
     | project Timestamp, DeviceName, FileName, FolderPath, InitiatingProcessCommandLine;
 
 // Logon context
 let logonCtx =
     DeviceLogonEvents
     | where Timestamp between (ago(timeWindow) .. now())
-    | where DeviceName in (ev | project DeviceName)
+    | join kind=inner (ev | project DeviceName) on DeviceName
     | project Timestamp, DeviceName, AccountDomain, AccountName, LogonType, LogonSucceeded;
 
 // =============================================
@@ -106,7 +106,7 @@ svcExec
 | extend Signal="ServiceExec"
 | union (rdpChains | extend Signal="RDP Chain")
 | union (socksPivot | extend Signal="SOCKS/Proxy")
-| join kind=leftouter seedAlert on $left.DeviceName == $right.ProductName
+| join kind=leftouter seedAlert on $left.AlertId == $right.AlertId
 | project AlertId, Title, Severity, TimeGenerated,
           Signal, DeviceName, InitiatingProcessFileName, InitiatingProcessCommandLine,
           Occurrences, FirstSeen, LastSeen
