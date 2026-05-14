@@ -62,3 +62,24 @@
 | **Clipboard / share‑sheet / file‑provider abuse** | Managed → unmanaged data transfer via clipboard, share sheet, or file providers. | **App‑layer / DLP** | Validates Intune APP DLP controls and prevents silent data exfiltration. |
 | **PRT / refresh token lifecycle anomalies** | Unusual refresh token usage patterns and long‑lived token reuse. | **Token / Monitoring** | Enables hunting for token misuse and anomalous refresh activity. |
 | **Accessibility / notification listener abuse** | Accessibility APIs or notification listeners used to capture MFA or screen content. | **Input / App‑layer** | Tests detection of persistent, high‑privilege exfiltration channels. |
+
+
+## Logs to consider
+
+### SIEM Log and Alert Priorities
+
+- **Azure AD Sign‑in Logs** — ingest sign‑in events, clientApp, requestId, tokenId, ipAddress, deviceDetail; alert on token reuse, simultaneous sessions, impossible travel, and failed Conditional Access evaluations.  
+- **Azure AD Audit and OAuth Consent Logs** — ingest consent grants, app registrations, redirect URIs, admin consent events; alert on new app consent, unusual redirect changes, and high‑privilege consent by non‑admins.  
+- **Azure AD Token Issuance and Refresh Events** — ingest refresh token issuance and refresh activity, token lifetimes, and token binding metadata; alert on refresh token reuse, long‑lived refresh patterns, and token issuance during enrolment.  
+- **Intune Enrollment and Device Compliance Logs** — ingest enrolment attempts, compliance state changes, profile installs, and deviceId; alert on token issuance before compliance, unexpected profile installs, and rapid compliance state flips.  
+- **Intune App Protection and App Access Logs** — ingest app protection policy hits, clipboard events, save as open in events, and managed app sign‑ins; alert on blocked DLP actions, share sheet bypass attempts, and personal account sign‑ins in managed apps.  
+- **Zscaler Client Connector and ZPA Session Logs** — ingest connector status, sessionID, PAC/app bypass events, and app routing decisions; alert on missing ZCC sessions for M365 apps, app bypass events, and PAC mismatches.  
+- **Network Metadata DNS SNI and Proxy Logs** — ingest DNS queries, SNI, HTTP host headers, and proxy session metadata; alert on suspicious SNI patterns, AiTM proxy indicators, and unexpected M365 endpoint resolution.  
+- **Mobile Defender for Endpoint and MTD Alerts** — ingest deviceRiskScore, jailbreak root detections, malicious app installs, and MTD verdicts; alert on root jailbreak, stalkerware detection, and high device risk scores.  
+- **Tanium Endpoint Actions and Inventory Logs** — ingest installed apps, action history, device configuration, and remediation actions; alert on unexpected app installs, repair channel tool usage, and persistent service creation.  
+- **App Telemetry from Managed Apps** — ingest appId, requestId, tokenId, API endpoints called, and error codes from Outlook Teams OneDrive; alert on cross‑app token usage, unusual Graph API calls, and failed token binding checks.  
+- **Device Trust and Certificate Events** — ingest CA installs, trust store changes, mobileconfig installs, and profile changes; alert on new CA installs, malicious mobileconfig installs, and profile tampering.  
+- **Network Access and Wi‑Fi Events** — ingest Wi‑Fi SSID joins, captive portal interactions, and DHCP lease metadata; alert on connections to known rogue SSIDs, captive portal credential submissions, and sudden network changes.  
+- **Notification and Accessibility Events** — ingest notification listener registrations, accessibility service enables, and related app grants; alert on new notification listeners, accessibility API grants, and repeated MFA code exposures.  
+- **Screen Capture and Remote Access Events** — ingest screen recording starts, remote control sessions, and screen share events; alert on screen capture attempts in managed apps and remote access tool usage on mobile devices.  
+- **Correlation and Enrichment Fields** — ensure userPrincipalName, deviceId, deviceOS, appId, requestId, tokenId, and ipAddress are normalized across sources for correlation; alert on correlated anomalies spanning identity device and network signals.
