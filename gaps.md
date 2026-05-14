@@ -47,3 +47,18 @@
 | **Zero‑click / vendor implant simulation** | Simulated low‑visibility exploit implant to validate telemetry. | Device / Advanced Threat | Tests detection for sophisticated compromises that bypass user interaction. |
 | **Repair‑channel persistent implant** | Persistence via repair/service channel or vendor tools. | Device / Persistence | Validates detection of non‑standard persistence mechanisms not covered by standard malware tests. |
 | **MDM/profile tampering / malicious .mobileconfig** | Rogue profile or CA installs pre/post enrolment enabling interception/persistence. | Device / Enrolment | Detects rogue MDM/CA installs and trust‑store changes that enable network interception. |
+
+## Additional High Value ThreatMetrix to consider (may not be in scope)
+
+| **Gap** | **One‑liner** | **Category** | **Why we need this** |
+| --- | --- | --- | --- |
+| **AiTM / real‑time phishing proxy** | Phishing proxy captures post‑MFA session tokens in real time for immediate replay. | **Network / OAuth** | **Bypasses MFA** and yields immediate account access; high speed, low noise compromise. |
+| **OAuth redirect / consent abuse** | Malicious apps or crafted OAuth URLs abuse redirect behavior to deliver phishing or malware. | **OAuth / Identity** | Tests mobile consent flows and prevents rogue app consent or silent redirects. |
+| **PRT / browser cookie theft & replay** | Primary Refresh Tokens or SSO cookies stolen from mobile browsers (Edge/Chrome) and replayed. | **Token / Identity** | Validates token‑binding and long‑lived SSO protections for mobile browsers. |
+| **Zero‑click system exploits** | Remote, no‑interaction exploits (zero‑click) that achieve silent code execution on device. | **Device / Advanced Threat** | Enables stealthy full device compromise; detection must cover kernel/system anomalies. |
+| **Zscaler client connector / tunnel bypass** | App or PAC misconfiguration allows M365 traffic to bypass Zscaler inspection. | **Network / Proxy** | Ensures network controls actually cover M365 apps; prevents uninspected token leakage. |
+| **Work‑profile provisioning race / sideloading** | Transient provisioning window allows sideloading into Android work profile. | **Android Work Profile** | Tests for unauthorized app injection and cross‑profile data leakage. |
+| **Repair‑channel / vendor persistence** | Persistence via repair/service channels or vendor tools that survive wipes. | **Device / Persistence** | Detects non‑standard persistence mechanisms that evade normal EDR/MTD. |
+| **Clipboard / share‑sheet / file‑provider abuse** | Managed → unmanaged data transfer via clipboard, share sheet, or file providers. | **App‑layer / DLP** | Validates Intune APP DLP controls and prevents silent data exfiltration. |
+| **PRT / refresh token lifecycle anomalies** | Unusual refresh token usage patterns and long‑lived token reuse. | **Token / Monitoring** | Enables hunting for token misuse and anomalous refresh activity. |
+| **Accessibility / notification listener abuse** | Accessibility APIs or notification listeners used to capture MFA or screen content. | **Input / App‑layer** | Tests detection of persistent, high‑privilege exfiltration channels. |
