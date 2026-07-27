@@ -39,3 +39,45 @@ Limited experience, with some exposure to Python and AI tools. Not a requirement
 
 4. Overall Assessment
 The candidate is not yet strong in SIEM tooling, Microsoft Defender, Linux, or detection engineering fundamentals. However, he shows strong potential, real incident response exposure, and a positive learning attitude. With structured mentorship, he is likely to grow effectively into a BA4 role.
+
+
+
+-----
+
+Strengths
+Foundational Security Knowledge  
+Demonstrates solid understanding of Red, Blue, and Purple team functions and how offensive and defensive activities align.
+
+Incident Handling Experience  
+Provided a detailed example of managing an AWS metadata server incident, including investigation, escalation, and remediation. Shows structured thinking and real-world exposure.
+
+Analytical Mindset  
+Understands attacker behaviour during compromise scenarios and can articulate logical attack flows.
+
+Automation & Problem Solving  
+Built an internal tool to reduce manual log‑processing steps, demonstrating initiative and ability to improve operational efficiency.
+
+Coachability & Attitude  
+Friendly, collaborative, asks thoughtful questions, and shows willingness to learn — strong cultural fit for junior roles.
+
+Basic KQL Familiarity  
+Has some exposure to KQL through Google SecOps, providing a starting point for Defender training.
+
+Risks / Development Areas
+Limited SIEM Depth  
+Splunk experience is basic; lacks confidence with query operators, stats functions, and structured searches.
+
+Minimal Microsoft Defender Experience  
+Only read‑only access; no Advanced Hunting exposure. Will require training to be productive in Defender environments.
+
+Partial MITRE ATT&CK Understanding  
+Understands attacker behaviour but did not map actions to formal ATT&CK tactics and missed Command & Control.
+
+Weak Linux Skills  
+Limited understanding of Linux permissions, ownership, and OS fundamentals. Windows knowledge is stronger.
+
+Detection Engineering Fundamentals Need Growth  
+Understands high-level concepts but needed prompting to discuss false positives and detection logic structure.
+
+Limited DevOps/SecOps Exposure  
+Some Python and AI usage, but not enough to support more advanced automation or pipeline work.
