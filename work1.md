@@ -65,9 +65,12 @@ You are new to ServiceNow and require guidance on navigating the UI to find logs
 
 ------------------------------
 
-Attack type:
-hostname: servicefirst.service-now.com
-ip: 1.1.1.1
-username: user1
-date time: 01/01/2026 10:00 UTC 01/01/2026 11:00 UTC
+Attack type: 
+Server: servicefirststg2.service-now.com
+username: ADMIN (ServiceNow Local Account) and ACCNT (Impersonated Account)
+IP: 1.1.1.1
+Internal IP: 2.2.2.2
+date time: 17/07/2026 14:09 UTC
 Description:
+
+
