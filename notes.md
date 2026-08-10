@@ -1,4 +1,32 @@
 Key	Huntability	Reason
+18958	Huntable	Host‑side JAR modification visible in sys_audit/host logs
+18984	Huntable	WinRM TrustedHosts change visible in Windows/sys_audit logs
+19001	Huntable	JVM config file access visible in sys_audit/host logs
+19003	Huntable	MID config.xml access visible in sys_audit/host logs
+19005	Huntable	Packet capture commands visible in Windows event logs
+19009	Huntable	CPU exhaustion visible in MID availability/system logs
+19011	Huntable	Memory exhaustion visible in MID availability/system logs
+19013	Huntable	Disk exhaustion visible in MID availability/system logs
+19017	Huntable	Repeated MID restarts visible in syslog/Windows service logs
+19019	Huntable	MID process termination visible in syslog/Windows logs
+19021	Huntable	Firewall rule modification visible in Windows event logs
+19025	Huntable	CyberArk App ID failure visible in syslog/auth logs
+19049	Huntable	Impersonation visible in syslog_transaction/sys_audit
+19052	Huntable	Impersonation visible in syslog_transaction/sys_audit
+19053	Huntable	ACL bypass attempt visible in syslog_transaction
+19054	Huntable	Workflow access failure visible in syslog_transaction
+19055	Huntable	Privilege escalation attempt visible in syslog_transaction
+19056	Huntable	Local account creation visible in sys_user/syslog
+19057	Huntable	Basic auth login visible in syslog/auth logs
+19061	Huntable	Authentication using decommissioned MID creds visible in syslog
+19067	Huntable	Discovery pattern modification visible in sys_update_xml
+19068	Huntable	Probe script modification visible in sys_update_xml
+19069	Huntable	Sensor script modification visible in sys_update_xml
+19070	Huntable	MID capability assignment visible in sys_audit
+19074	Huntable	Discovery schedule change visible in sys_audit
+19075	Huntable	Discovery scope change visible in sys_audit
+19076	Huntable	MID log verbosity change visible in sys_properties
+19095	Huntable	Integration workflow modification visible in sys_update_xml
 18956	Needs Re‑Test	MID registration evidence only in ECC/MID agent logs (expired)
 18964	Needs Re‑Test	TLS cert‑validation failure only visible in MID agent logs
 18966	Needs Re‑Test	TLS hostname‑validation failure only visible in MID agent logs
@@ -33,3 +61,6 @@ Key	Huntability	Reason
 19073	Needs Re‑Test	Unauthorized MID workflow execution visible only in ECC
 19077	Needs Re‑Test	ECC record deletion cannot be validated (expired)
 19078	Needs Re‑Test	ECC backlog saturation only visible in ECC queue
+		
+		
+
