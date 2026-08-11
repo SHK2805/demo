@@ -1,7 +1,5 @@
 # General prompt
 
-Here is a **fully‑polished, reusable threat‑hunting prompt** you can paste into **any GenAI tool**.  
-It is structured, strict, and designed to force the model to give you **complete evidence‑collection steps** across ServiceNow, MID Server, Splunk, Defender, and server logs — and prepare that evidence for **JIRA reporting**.
 
 ---
 
