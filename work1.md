@@ -1,14 +1,8 @@
+Based on review of Microsoft’s documented behaviour for Intune App Protection Policies (APP) and Android Work Profile restrictions, the tester’s assessment is correct: there is no execution path for a personal‑account exfiltration attempt inside a managed Microsoft 365 application.
 
-h3. Threat Hunting Investigation Notes: IP Address Discrepancy
+Microsoft officially states that when an app is managed under APP with “Require corporate account” or “Block multi‑identity” enabled, the application will not allow sign‑in with personal identities. In this configuration, the app enforces single‑identity mode, meaning the user cannot add or switch to a personal account within the same app session. Any attempt to add a second identity is blocked before the app can initiate authentication or access any data.
 
-*Observation:* 
-The tester reported an execution IP of *1.1.1.1*, but the Entra ID non-interactive sign-in logs for the same Entra Device ID show an origin IP of *2.2.2.2*.
+Additionally, Microsoft’s guidance for Android Work Profile confirms that personal accounts cannot be used inside work‑profile managed apps, and cross‑profile data movement is technically prevented by OS‑level sandboxing. This means the user cannot navigate between work and personal identities inside the same app, nor transfer data between profiles.
 
-*Technical Analysis:*
-This discrepancy is expected behavior for an Intune-managed Android BYOD device and does not indicate a false positive or unauthorized device spoofing. The difference is likely due to one of the following factors:
-1. **Network Address Translation (NAT/CGNAT):** The tester may have provided the local interface IP of the device, whereas Entra ID logs the public-facing egress IP of the cellular carrier or local Wi-Fi network.
-2. **Intune Work Profile / Per-App VPN:** Corporate applications within the Android Work Profile may route traffic through an enterprise VPN or Microsoft Tunnel gateway (logging as 2.2.2.2), while personal applications or standard "what is my IP" web checks run outside the container (logging as 1.1.1.1).
-3. **Microsoft Cloud Architecture:** Non-interactive background syncs (e.g., Outlook, Teams) often leverage Microsoft front-door proxies, which can alter the logged IP depending on the protocol used.
-
-*Conclusion:*
-The activity is verified to belong to the tester's device asset based on the matching unique Entra Device ID. The IP mismatch is a side effect of mobile routing architecture and containerization. Moving ticket to the next phase of review.
+Outcome:  
+Because both Intune APP and Android Work Profile restrictions prevent personal‑account sign‑in and block multi‑identity behaviour at the policy level, the attempted exfiltration cannot progress beyond the initial sign‑in attempt. No authentication occurs, no secondary identity is created, and no data movement path exists.
