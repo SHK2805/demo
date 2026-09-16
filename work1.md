@@ -1,11 +1,15 @@
-The user attempted to weaken TLS inspection or redirect traffic by installing a malicious CA certificate or global proxy profile before enrolling the device into Intune. We must verify whether the enrollment process detects or mitigates this pre‑existing configuration.
+The activity under review occurred before the device was enrolled on Intune MDM. At this stage, the iOS device had no management profile, no MDM channel, and no telemetry connection to Intune or any Microsoft 365 security platform. As a result, no device‑level logs or configuration events were generated or collected for the attempted installation of the CA certificate or configuration profile.
 
-Risks:
+Log Availability:
 
-TLS interception: A malicious CA allows full HTTPS MITM against corporate apps.
+No direct device logs exist for this activity because Intune only begins collecting device telemetry after the MDM enrollment profile is installed.
 
-Traffic redirection: A global proxy profile could route corporate traffic to an attacker-controlled server.
+The malicious CA certificate installation took place outside Intune’s visibility and control, and iOS does not expose pre‑enrollment configuration changes to MDM.
 
-Bypassing App Protection Policies: If corporate apps trust the malicious CA, sensitive data could be intercepted.
+Any logs available in Entra ID (sign‑ins), Conditional Access, or Intune (enrollment metadata) relate to the user identity and enrollment process, not the device’s configuration state at the time of the activity. These therefore represent indirect evidence only, and do not provide visibility into the profile installation itself.
 
-False sense of security: Intune compliance checks may pass even though the device is compromised, because pre‑existing profiles are invisible to MDM.
+Platform Behaviour:  
+Apple’s MDM protocol prevents Intune from detecting, viewing, or removing configuration profiles or certificates that were installed prior to enrollment. This is expected behaviour for BYOD iOS devices.
+
+Conclusion:  
+Because the device was not enrolled at the time of the attempted profile installation, there are no direct device logs available for this event. Only identity‑based and enrollment‑related logs can be referenced, and these do not provide device‑level visibility into the malicious CA installation. The absence of direct logs is expected and consistent with Apple’s BYOD and MDM security model.
