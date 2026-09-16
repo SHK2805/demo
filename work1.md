@@ -1,36 +1,29 @@
-HUNTING HYPOTHESIS & RISK
-Hypothesis:  
-The user attempted to bypass Android Work Profile restrictions by installing a third‑party keyboard (net.milosz.keyboard) into the work profile using ADB sideloading and pm install-existing. The goal was to test whether personal‑profile apps could be forced into the work profile.
+The user attempted to move corporate data from the Intune-managed work profile into an unmanaged/personal app using Save-As, Open-In, or Share operations. The attempt failed due to policy restrictions.
 
 Risk:  
-If successful, this could allow:
+Even though the attempt was blocked, this behaviour may indicate:
 
-Keystroke interception inside corporate apps (Teams, Outlook, Edge).
+Intentional data exfiltration to personal cloud storage or external recipients.
 
-Data leakage via malicious keyboard apps.
+Attempt to bypass App Protection Policies (APP) or Work Profile separation.
 
-Cross‑profile contamination, violating Android Enterprise isolation.
+Potential misuse of corporate data on a BYOD device.
 
-Policy circumvention, indicating a potential insider threat or misconfiguration.
+Testing of policy boundaries by a user (accidental or deliberate).
 
-Outcome:  
-All attempts failed, and the work profile correctly enforced restrictions. Only approved keyboards were available inside Teams.
+Because the work profile enforces strict DLP controls, no direct device logs exist.
+Your evidence must come from Entra sign-in logs, M365 audit logs, and Intune app protection policy enforcement events.
 
----
+----
 
-Entra ID (Sign‑in & Audit Logs)
-Note: Entra does NOT log keyboard installation attempts or ADB/pm commands. Only app launches, sign‑ins, and device compliance events may appear.
+No direct Entra telemetry exists for Save-As/Open-In actions on Android work profile. Only surrounding sign-in and policy enforcement logs will be available, which are not direct evidence of the activity
 
-Intune (Device Compliance & Work Profile App Inventory)
-Note: Intune does not log failed sideload attempts or cross‑profile installation attempts. It only shows apps successfully installed in the work profile.
+Intune does not provide direct logs of Save-As/Open-In attempts. Only policy configuration and enforcement status can be validated.
 
----
-The attempted installation of the third‑party keyboard (net.milosz.keyboard) into the Android Work Profile failed due to enforced Intune and Android Enterprise restrictions.
+Splunk or Microsoft Defender does not contain any direct telemetry for Save-As/Open-In actions on Android work profile devices.
 
-Official Microsoft documentation confirms that Work Profiles are isolated containers, and Intune can only manage the work partition. BYOD devices do not send OS‑level logs (such as ADB, sideload, or package manager events) to Intune, Entra, Splunk, or Defender, so no telemetry exists for the failed installation attempt.
-
-The device has an Intune Android Enterprise Device Restrictions profile applied, with Approved Keyboards: Require, and only Gboard and SwiftKey selected. This policy prevents unapproved keyboards from being installed or used inside the Work Profile.
-
-The ADB error “shell does not have permission to access user 10” is consistent with Android Enterprise sandboxing and confirms that the Work Profile blocked access.
-
-Policy is functioning as expected, and there is no evidence of compromise or policy bypass.
+----
+Summary: User attempted a Save-As/Open-In operation to move corporate data from the Intune-managed Android work profile to an unmanaged/personal app.
+Result: Attempt failed. Intune App Protection Policies and Work Profile restrictions prevented data sharing and saving copies.
+Telemetry: No direct logs exist for Save-As/Open-In attempts due to BYOD work profile isolation. Reviewed Entra sign-ins, M365 audit logs, and Intune policy status. No evidence of data exfiltration or file movement.
+Conclusion: Activity blocked as designed. No data left the corporate boundary.
