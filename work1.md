@@ -1,1 +1,11 @@
-The iOS device did not delete the pre‑installed malicious CA certificate during Intune MDM enrollment because iOS does not allow MDM to remove any configuration profiles or certificates that were installed before enrollment. Apple’s security model requires that only profiles installed by the MDM can be managed or removed by that MDM. Pre‑existing profiles are treated as user‑owned and cannot be touched by Intune. This is expected behaviour and is documented across Apple’s MDM protocol and Intune’s enrollment model.
+The user attempted to weaken TLS inspection or redirect traffic by installing a malicious CA certificate or global proxy profile before enrolling the device into Intune. We must verify whether the enrollment process detects or mitigates this pre‑existing configuration.
+
+Risks:
+
+TLS interception: A malicious CA allows full HTTPS MITM against corporate apps.
+
+Traffic redirection: A global proxy profile could route corporate traffic to an attacker-controlled server.
+
+Bypassing App Protection Policies: If corporate apps trust the malicious CA, sensitive data could be intercepted.
+
+False sense of security: Intune compliance checks may pass even though the device is compromised, because pre‑existing profiles are invisible to MDM.
