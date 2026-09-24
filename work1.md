@@ -1,18 +1,22 @@
-Key Findings from Testing:
+Environment Limitation
 
-Rogue CA was installed only in the personal profile.
-Work profile certificate installation was not possible.
-Microsoft Authenticator was installed in the personal profile.
-JWT token observed during Graph communication.
-Passkey registration failed due to policy restriction.
-Captured token had limited scopes:
-email
-openid
-profile
-UserAuthenticationMethod.Read
-UserAuthenticationMethod.ReadWrite
-Token allowed limited Microsoft Graph enumeration.
-No sensitive corporate data accessed.
-No MFA manipulation observed.
-No certificate pinning bypass attempted.
-Device was non-rooted.
+⚠️ There are NO mobile device logs available.
+
+Because:
+
+No Defender for Endpoint Mobile
+No Defender for Mobile
+No Mobile Threat Defence (MTD)
+No Android system logging
+No forensic acquisition
+Personal BYOD device
+
+Therefore:
+
+✅ You can investigate cloud activity.
+
+❌ You cannot confirm token theft directly from device telemetry.
+
+Add the following Jira comment if appropriate:
+
+No device-level telemetry exists for this BYOD device. Installation of a rogue CA certificate, token interception activity and application-level network activity cannot be directly validated from available corporate logging sources.
