@@ -3,12 +3,12 @@ Give me the best fridge for a budget of below 1500. We do not need fancy feature
 
 Current fridge dimensions
 
-Height 70 cm
-Width  35.4 cm
-Depth  26.5 cm
+Height 70 inches
+Width  35.4 inches
+Depth  26.5 inches
 
 Storage cabin space dimensions
 
-Height 71.3 cm
-Width  36 cm
-Depth  24.6cm (The fridge can come forward; the depth cannot be exact size)
+Height 71.3 inches
+Width  36 inches
+Depth  24.6 inches  (The fridge can come forward; the depth cannot be exact size)
