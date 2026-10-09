@@ -57,17 +57,34 @@ Cons:
 - The library must support multiple concurrent instances without shared global state, which may be the hardest part depending on how it is built today.
 - The app is responsible for the gateway list, switching UX and re-authentication policy.
 
+
+OPTION 4: Shared server identity across regional gateways (no library change)
+
+How it works:
+- All regional gateways act as one logical gateway. They share the same server key material (for example an HSM-replicated key pair and the same certificate/public key), so the device sees the same server identity in every region.
+- The device registration (device ID and device public keys) is replicated across the regional gateways, or held in a shared registry that every region can read.
+- The device registers once, and that registration is valid in any region.
+- Switching region means the app points at a different base URL or hostname. Nothing on the device is wiped, migrated or re-registered.
+
+Pros:
+- No change to the shared library, so no impact or regression risk for the other apps.
+- No migration for existing users, and no new keys or storage on the device.
+- No extra routing hop or new central component in the request path, so no new single point of failure or added latency.
+- Switching is fast and does not need a re-registration step.
+
+Cons:
+- Requires the library (or the app's use of it) to allow the base URL to be changed at runtime. If it cannot, this option is not viable without a library change.
+- Sharing server private keys across regions, and replicating device registration data, may conflict with data-residency or regulatory requirements. This needs to be confirmed with Security and Compliance before going further.
+- It couples the regions. A compromise or revocation of the shared server key affects every region, and device revocation must propagate to all of them.
+- Registration data must be replicated or shared securely and kept consistent, including revocation, re-registration and key rotation.
+- Certificate pinning must work across regions (same public key or an agreed pin set), and key rotation must be coordinated everywhere at once.
+- Operationally heavier on the server side: replication, consistency handling and cross-region key management (HSM) all become part of the design.
+- Any session or token binding to a specific gateway must be designed so tokens are valid, or can be safely re-issued, when the user switches region.
+
+
 Not recommended: snapshotting and restoring the library's stored registration on each switch. It looks like a no-change option, but it is fragile with hardware-backed Keystore/Keychain keys.
 
-RECOMMENDATION
-- If regions exist for residency or regulatory reasons: Option 3 (or Option 1 if we want the full cleanup), with no shared front door.
-- If regions are about routing or UX and the library truly cannot change: Option 2, designed as a proper multi-region global gateway.
 
-Two answers would settle the choice:
-1. Why do the regions exist (residency/regulation, capacity, or separate entities/brands)?
-2. Does the library let the app set the base URL or custom headers at runtime, and can it run more than one instance today?
-
-Happy to walk through any of these in more detail.
 
 Thanks,
 [Name]
