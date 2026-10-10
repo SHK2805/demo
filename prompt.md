@@ -540,12 +540,19 @@ Keep AI/ML and Generative AI as optional future learning, not part of the core p
 
 For every learning stage, recommend the minimum number of courses and resources necessary to learn the required skills.
 
-Prioritise:
-1. High-quality Udemy courses available through my subscription.
-2. Microsoft Learn.
-3. Official Microsoft documentation and hands-on exercises.
-4. Relevant NCSC guidance.
-5. Reputable free YouTube tutorials where they add value.
+Prioritise learning resources in this order:
+
+1. High-quality, up-to-date Udemy courses available through my subscription, for structured teaching and practical demonstrations.
+2. Official Microsoft Learn learning paths, particularly for the current AZ-104, SC-300 and SC-500 exam objectives.
+3. Official Microsoft documentation, assessment exercises and hands-on labs to verify what I have learned.
+4. Relevant UK NCSC guidance.
+5. Reputable free YouTube tutorials where they fill a specific gap or explain a difficult topic more effectively.
+
+For every paid or subscription-based course, verify the exact title, provider, course-update date and direct link wherever possible. Check that its content aligns with the current exam objectives rather than relying on its title or publication date alone.
+
+Treat my preferred certification sequence as the default plan: AZ-104 → SC-300 → SC-500. Explain any recommended change briefly and only when supported by current certification information, my demonstrated knowledge gaps or evidence from relevant UK job vacancies.
+
+Do not recommend AZ-900 preparation or certification. Check only for essential foundational knowledge I am missing and address those gaps directly.
 
 For each recommended course or resource, provide only the following information:
 
@@ -565,7 +572,7 @@ Distinguish between video/course duration and the additional time needed for exe
 
 ## 5. Recommend Certifications Only When Justified
 
-Certifications are optional components of the learning path, not the objective.
+Certifications motivate me. 
 
 Evaluate current Microsoft certifications and recommend only those that materially improve my readiness or credibility for Azure Cloud Security Engineer roles.
 
