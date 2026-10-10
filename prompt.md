@@ -9,12 +9,12 @@ are unrealistic.
 - Current role: Junior Cyber Security Engineer, 1 year, working in SOC,
   threat hunting, KQL (Sentinel/Defender) and Splunk SPL
 - Experience level (None / Basic / Working):
-  - Azure: Basic | AWS: Basic | Entra ID: Basic | Networking: Basic
+  - Azure: Basic | : Basic | Entra ID: Basic | Networking: Basic
   - SIEM engineering: Basic
   - IaC, secure SDLC, GRC/risk assessment, data protection: None
 - Education: Master's degree in computing
 - Existing certifications: None
-- Employer stack: Microsoft and AWS (prioritise Azure for depth)
+- Employer stack: Microsoft and  (prioritise Azure for depth)
 - Target role: Security Architect in the UK, sector preference: open
 - Career plan: first architect role in-house, then move to consultancy
   or contracting. Target: roughly 2 years after becoming an architect.
@@ -60,7 +60,7 @@ labelled assumptions.
     - Evidence supporting your assessment
     - How to mitigate it
 
-2. Skills-gap analysis: what Security Architects do day to day versus
+2. Skills-gap analysis: what Security Architects do day-to-day versus
    what I do now (tactical execution -> strategic design, trade-offs,
    stakeholder influence, risk ownership, written communication).
 3. A phased pathway (Phase 1, 2, 3, with realistic timeframes) from my
@@ -154,4 +154,53 @@ If you were hiring for a Security Architect role today, what are the
 top five reasons you would reject my CV, and what specific evidence
 would remove each objection?
 Assume I cannot complete every recommendation. Tell me what to do first,
-what to do second and what to deliberately postpone.
+what to do second, and what to deliberately postpone.
+
+
+-----
+
+## Target role clarification: Cloud Security Solution Architect
+
+My specific target is a **Cloud Security Solution Architect in the UK**. Do not treat this as interchangeable with a general Security Architect, Cloud Security Engineer or Enterprise Security Architect.
+
+Focus the entire career strategy on becoming capable of designing, evaluating and defending secure cloud solutions in enterprise environments.
+
+Prioritise Azure for deep technical expertise because my employer uses Microsoft and AWS, while developing sufficient AWS capability to design and assess solutions across both platforms.
+
+Evaluate the skills required in the following areas:
+
+1. **Cloud architecture:** Azure landing zones, management groups, subscriptions, resource organisation, network topology, connectivity, segmentation, private endpoints, DNS, hybrid connectivity and multi-region design.
+2. **Cloud identity and access:** Microsoft Entra ID, federation, workload identities, managed identities, privileged access, Conditional Access, least privilege and identity governance.
+3. **Cloud security services:** Azure Policy, Defender for Cloud, Microsoft Sentinel, Key Vault, security baselines, configuration management, logging and monitoring.
+4. **AWS security:** IAM, Organisations, Control Tower, SCPs, VPC security, CloudTrail, GuardDuty, Security Hub, KMS and equivalent architectural controls.
+5. **Solution security design:** business and technical requirements, threat modelling, trust boundaries, data flows, attack paths, security requirements, control selection and design assurance.
+6. **Infrastructure and application security:** Infrastructure as Code, Terraform or Bicep, CI/CD security, secrets management, container security, API security and software supply-chain controls.
+7. **Data protection and resilience:** data classification, encryption, key management, backup, disaster recovery, availability, recovery objectives and relevant UK privacy obligations.
+8. **Governance and risk:** security risk assessments, risk ownership, residual risk, exceptions, control mapping, assurance, regulatory requirements and architecture decision records.
+9. **Architecture communication:** solution architecture diagrams, design documents, architecture review presentations, trade-off analysis, stakeholder workshops and implementation guidance.
+
+Do not assume I need expert-level knowledge of every technology. Distinguish what I must be able to design independently, what I should understand sufficiently to review, and what can be delegated to specialist engineers.
+
+### Required career strategy
+
+Compare the realistic routes from my SOC background into Cloud Security Solution Architecture. Prioritise opportunities that let me take ownership of cloud security design, not merely operate cloud security tools.
+
+Identify the most important experience gaps that would prevent a UK employer from hiring me directly into this role.
+
+Design progressive workplace assignments and portfolio projects that demonstrate the ability to:
+
+- Translate business and technical requirements into a secure cloud solution.
+- Produce architecture and trust-boundary diagrams.
+- Threat-model a solution and identify appropriate controls.
+- Compare at least two feasible architectural options.
+- Explain cost, security, operational, availability and maintainability trade-offs.
+- Document residual risk, assumptions and design decisions.
+- Define security requirements and validate that the implemented solution meets them.
+- Explain how the solution will be monitored, maintained and recovered.
+- Communicate the design to engineers, architects, risk owners and non-technical stakeholders.
+
+Use real UK Cloud Security Solution Architect vacancies to determine which Azure, , networking, identity, IaC, governance and architecture skills are most frequently required.
+
+Make the roadmap Azure-first, with a deliberate point at which  breadth should be added. Avoid recommending two parallel, equally deep cloud-learning paths unless the job-market evidence justifies that investment.
+
+Define the evidence required to progress from SOC Engineer to Cloud Security Engineer, then to Cloud Security Solution Architect. Include realistic timeframes, interview-readiness criteria, workplace opportunities and fallback roles if I cannot obtain architecture responsibilities in my current position.
