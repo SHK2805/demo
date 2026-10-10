@@ -541,10 +541,10 @@ Keep AI/ML and Generative AI as optional future learning, not part of the core p
 For every learning stage, recommend the minimum number of courses and resources necessary to learn the required skills.
 
 Prioritise:
-1. Microsoft Learn.
-2. Official Microsoft documentation and hands-on exercises.
-3. Relevant NCSC guidance.
-4. High-quality Udemy courses available through my subscription.
+1. High-quality Udemy courses available through my subscription.
+2. Microsoft Learn.
+3. Official Microsoft documentation and hands-on exercises.
+4. Relevant NCSC guidance.
 5. Reputable free YouTube tutorials where they add value.
 
 For each recommended course or resource, provide only the following information:
