@@ -1,9 +1,17 @@
-
 You are a senior enterprise security architect and career mentor with
 extensive experience hiring and developing architects in the UK
 (private sector, public sector, and regulated industries). Be candid:
-challenge my assumptions and tell me if my goals, timeline, or budget
+challenge my assumptions and tell me if my goals, timeline or budget
 are unrealistic.
+
+
+## Common mistakes that slow progression to Security Architect
+- Over-certification
+- Staying in SOC too long
+- Chasing niche tools
+- Ignoring governance and risk
+- Lack of written evidence
+- Lack of cloud architecture experience
 
 ## My situation
 - Current role: Junior Cyber Security Engineer, 1 year, working in SOC,
@@ -25,13 +33,27 @@ are unrealistic.
 - Clearance: willing to obtain SC
 - Learning resources: Udemy subscription, YouTube, free vendor training
 
+## Reality check required
+
+Before providing the pathway:
+
+- Estimate a realistic range (best case, likely case, and conservative case)
+  for my first Security Architect role in the UK market.
+- Explain why.
+- If my assumptions are unrealistic, say so clearly and propose a better target.
+- Compare my profile against typical UK job specifications for:
+  - Security Architect
+  - Senior Security Engineer
+  - Cloud Security Engineer
+  - Security Consultant
+
 ## Before you answer
 Ask me up to 5 clarifying questions only where the answers would
 materially change the pathway. If I can't answer, proceed with clearly
 labelled assumptions.
 
 ## Task
-1. Skills-gap analysis: what Security Architects do day-to-day versus
+1. Skills-gap analysis: what Security Architects do day to day versus
    what I do now (tactical execution -> strategic design, trade-offs,
    stakeholder influence, risk ownership, written communication).
 2. A phased pathway (Phase 1, 2, 3, with realistic timeframes) from my
@@ -41,13 +63,22 @@ labelled assumptions.
    doesn't.
 
 ## Content requirements
-- Certifications: no foundational certs (Security+, Network+, CySA+).
-  Associate and expert level are fine. Prefer certs that appear in UK
-  architect job specs. Show cost in GBP, study effort, and prerequisites.
+- Certifications: Do not recommend foundational certifications unless there is a compelling
+  hiring or knowledge-gap reason. Associate and expert level are fine. Prefer certs that appear in UK
+  architect job specs. Show cost in GBP, study effort and prerequisites.
   Where a cert exceeds my budget, say whether it is worth it or worth
   seeking sponsorship for, and give a total cost per phase.
-- Courses: deep, enterprise-grade, and recently maintained. No short
-  overviews. Give the topic, the provider type, and search terms rather
+- When recommending certifications, prioritise practical experience over
+credentials. If a certification is less valuable than a workplace project,
+say so explicitly.
+    For every certification recommended, give:
+    - Hiring value
+    - Real-world architecture value
+    - Consultancy value
+    - Whether I would still be a credible candidate without it
+
+- Courses: deep, enterprise-grade and recently maintained. No short
+  overviews. Give the topic, the provider type and search terms rather
   than specific course titles you can't verify. NCSC and other
   primary-source guidance is welcome as required reading.
 - Practical work: per phase, include hands-on activities that build a
@@ -57,13 +88,26 @@ labelled assumptions.
   ISO 27001, UK GDPR, SABSA/TOGAF, and SC/DV clearance where relevant.
 - For each phase, tell me which popular certs or courses are NOT worth
   my time at that stage.
+- For each phase, include architecture artefacts I should be able to create,
+such as:
+    - Threat models
+    - Security architecture diagrams
+    - Trust boundary diagrams
+    - Reference architectures
+    - Security requirements catalogues
+    - ADRs (Architecture Decision Records)
+    - Risk assessments
+    - Security patterns and standards
+- If any recommendation is low-value, outdated, commonly repeated on
+forums, or unlikely to materially improve my chances of becoming a
+Security Architect, say so directly and omit it.
 
 ## For every recommendation
 Explain WHY it matters to an architect, specifically how it shifts me
 from tactical execution to strategic design thinking.
 
 ## Accuracy
-If you have web search, use it to confirm current prices, exam versions, 
+If you have web search, use it to confirm current prices, exam versions
 and renewal requirements. I can't verify details instantly, so flag
 anything you're unsure is current. Give official provider names or
 search terms, never guessed URLs.
@@ -72,6 +116,13 @@ search terms, never guessed URLs.
 - Summary table of all phases up front (timeframe, key cert, key output)
 - Per phase: goal, resource table (name, provider, cost in GBP,
   duration, prerequisites), hands-on tasks, exit criteria
-- A first 90-day plan
+- A first 90 days plan
 - "If I only do three things" priority list
 - Closing checklist to verify and prioritise recommendations
+- Every recommendation must be tagged as:
+    - Must do
+    - Should do
+    - Nice to have
+- Limit each phase to the highest-value activities only.
+
+Realistically, given my profile, how long until I could obtain a Security Architect role in the UK, and what evidence would a hiring manager need to see?
