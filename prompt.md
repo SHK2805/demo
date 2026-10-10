@@ -44,7 +44,7 @@ Use the following information as the starting point.
 ### Location and employment market
 - Target market: United Kingdom.
 - Open to financial services, technology companies, consultancies, government contractors, and other industries.
-- My employer uses Microsoft and AWS technologies, so prioritise Microsoft Azure while identifying transferable AWS skills where useful.
+- My employer uses Microsoft, so prioritise Microsoft Azure. Focus on mastering Azure do not pivit to other cloud technologies.
 - I am willing to consider roles requiring UK security clearance if I am eligible and the opportunity is appropriate. Explain eligibility and clearance considerations without assuming I qualify.
 
 ### Learning constraints
@@ -76,7 +76,7 @@ Explain the typical responsibilities of an Azure Cloud Security Engineer, includ
 - Backup security, resilience, disaster recovery, and recovery testing.
 - Container, application, API, and workload security where relevant.
 
-Explain which skills are essential for an entry-level or transitioning Cloud Security Engineer, which are expected at an intermediate level, and which are more appropriate for senior engineers or architects.
+Explain which skills are essential for an entry-level or transitioning Cloud Security Engineer, which are expected at intermediate level, and which are more appropriate for senior engineers or architects.
 
 Do not turn the roadmap into an attempt to learn every Azure service. Prioritise the services and skills most relevant to real cloud security engineering jobs.
 
@@ -212,12 +212,12 @@ Explain how certifications should support practical competence rather than subst
 Build a sequenced learning path using resources that actually exist and are accessible to me.
 
 Prioritise:
-1. Microsoft Learn and official Microsoft documentation.
-2. Microsoft Azure Architecture Centre and Cloud Adoption Framework where relevant.
-3. Microsoft security documentation and hands-on exercises.
-4. UK National Cyber Security Centre (NCSC) cloud security guidance.
-5. Well-maintained Udemy courses.
-6. High-quality YouTube tutorials and practical labs.
+1. Well-maintained Udemy courses as I have a subscription.
+2. High-quality YouTube tutorials and practical labs.
+3. Microsoft Learn and official Microsoft documentation.
+4. Microsoft Azure Architecture Center and Cloud Adoption Framework where relevant.
+5. Microsoft security documentation and hands-on exercises.
+6. UK National Cyber Security Centre (NCSC) cloud security guidance.
 7. Other free resources where they offer clear value.
 
 For each resource, provide:
