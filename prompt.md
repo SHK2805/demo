@@ -1,3 +1,5 @@
+[Full output]
+
 # Career Transition Plan: Cloud Security Engineer (Microsoft Azure Focus)
 
 ## Role and Objective
@@ -455,3 +457,201 @@ Before finalising the roadmap, identify any assumptions that could materially ch
 If the available information is sufficient, proceed using explicit assumptions rather than delaying the roadmap.
 
 Do not give me a generic cloud-computing curriculum. Give me a targeted, evidence-based transition plan from my current SOC position to a credible **Microsoft Azure Cloud Security Engineer** role in the UK.
+
+
+------------------------
+
+[Output only the path, courses and certs]
+
+# My Personalised Cloud Security Career Learning Path — Microsoft Azure
+
+Act as an expert Microsoft Azure Cloud Security Engineer, senior security architect, technical instructor, and UK cybersecurity career mentor.
+
+Your task is to research, evaluate my background, identify my knowledge gaps, and create the **single best learning path** to help me transition into a Cloud Security Engineer role specialising in Microsoft Azure.
+
+My long-term ambition is to become an Azure Security Architect, but my immediate priority is to acquire the skills and practical knowledge needed for a Cloud Security Engineer position.
+
+## 1. Understand My Requirements
+
+Use the following profile when deciding what I should learn.
+
+**Current experience**
+- Junior Cyber Security Engineer with approximately one year of SOC experience.
+- Threat hunting, security monitoring and investigation.
+- Microsoft Sentinel, KQL and Splunk SPL.
+- Basic Microsoft Azure, AWS, Microsoft Entra ID, networking and SIEM engineering.
+- No practical experience with Infrastructure as Code, cloud security engineering, secure SDLC or GRC.
+- Master's degree in computing.
+- No existing professional certifications.
+- Basic familiarity with machine learning and Generative AI.
+
+**My constraints**
+- Location: United Kingdom.
+- Preferred technology: Microsoft Azure, with AWS only where it adds meaningful value.
+- Normal study time: 8 hours per week; up to 12 hours on a good week.
+- Available resources: Udemy subscription, YouTube, Microsoft Learn and free vendor training.
+- Certification budget: approximately £200 per certification, as a soft limit. Employer funding may be available.
+- I want genuine technical competence and employability, not just certificates.
+- I want to remain in cybersecurity rather than move into a general cloud administration or general cloud solutions architecture career.
+
+## 2. Research Before Producing the Learning Path
+
+Before deciding what I should study, investigate the following:
+
+1. Current Microsoft Azure Cloud Security Engineer skills, responsibilities and certification pathways.
+2. Recent UK job vacancies for Azure Security Engineer and Cloud Security Engineer roles, focusing on requirements that are realistic for someone transitioning from a SOC role.
+3. The technical skills and certifications most frequently requested by relevant employers.
+4. Current official Microsoft Learn paths, relevant official documentation, reputable Udemy courses and high-quality free YouTube resources.
+5. Current certification availability, exam codes, prerequisites, UK exam prices and retirement announcements.
+
+Use reliable, current sources and verify links wherever possible. Prefer official Microsoft sources for certification and product information, and the UK National Cyber Security Centre (NCSC) for relevant cloud security guidance.
+
+Use this research to determine the right learning sequence. Do not display the research process, detailed vacancy analysis, citations discussion, or lengthy explanations in the final output.
+
+Do not invent courses, certification details, prices, links or job-market findings. If a detail cannot be verified, say so briefly or omit it.
+
+## 3. Build the Single Best Learning Path
+
+Create one personalised, sequential learning path from my current level to the skills needed for my first Azure Cloud Security Engineer role.
+
+Choose the most important subjects in the correct order. Avoid presenting multiple competing roadmaps or asking me to choose between numerous alternatives.
+
+Cover the following areas only to the extent justified by my target role and current gaps:
+
+- Azure fundamentals and core services.
+- Azure networking and cloud infrastructure security.
+- Microsoft Entra ID, RBAC, Conditional Access, PIM and managed identities.
+- Azure Policy, Defender for Cloud and security posture management.
+- Key Vault, secrets management, encryption and data protection.
+- Cloud logging, monitoring, Sentinel and cloud threat detection.
+- Cloud incident response and vulnerability remediation.
+- Infrastructure as Code using Bicep or Terraform. Choose the best starting option for my goals.
+- Python or PowerShell automation where it adds practical value.
+- Git, secure deployment practices and basic CI/CD security.
+- Threat modelling, security assessments and risk-based remediation.
+
+Do not teach every Azure service. Prioritise the skills that will most improve my ability to perform and qualify for a Cloud Security Engineer role.
+
+Build on my existing SOC, Sentinel, KQL, Splunk and threat-hunting experience. Avoid making me repeat material I already know unless I need to deepen it for cloud security work.
+
+Keep AI/ML and Generative AI as optional future learning, not part of the core path unless current evidence shows they are essential for the target roles.
+
+## 4. Select Courses Carefully
+
+For every learning stage, recommend the minimum number of courses and resources necessary to learn the required skills.
+
+Prioritise:
+1. Microsoft Learn.
+2. Official Microsoft documentation and hands-on exercises.
+3. Relevant NCSC guidance.
+4. High-quality Udemy courses available through my subscription.
+5. Reputable free YouTube tutorials where they add value.
+
+For each recommended course or resource, provide only the following information:
+
+- **Order:** The sequence in which I should complete it.
+- **Course/resource:** Exact title.
+- **Provider:** Microsoft Learn, Udemy, YouTube or other provider.
+- **Link:** Direct, verified URL.
+- **Cost:** Free, included in my subscription, or additional cost where known.
+- **Study time:** Estimated hours required.
+- **Purpose:** One concise sentence explaining the skills I will gain.
+
+Choose one primary resource per topic wherever possible. Do not recommend several courses covering the same material.
+
+If a course is too advanced for my current level, put the prerequisite first. If a course is outdated, do not recommend it unless its relevance is clearly explained.
+
+Distinguish between video/course duration and the additional time needed for exercises and practice.
+
+## 5. Recommend Certifications Only When Justified
+
+Certifications are optional components of the learning path, not the objective.
+
+Evaluate current Microsoft certifications and recommend only those that materially improve my readiness or credibility for Azure Cloud Security Engineer roles.
+
+For each certification you recommend, provide:
+
+- Exact current certification name.
+- Current exam code, if applicable.
+- Official Microsoft certification link.
+- Recommended point in the learning sequence.
+- Required or recommended preparation.
+- Estimated preparation hours.
+- Current UK exam cost, if verifiable.
+- A brief reason it is worth pursuing.
+
+Place each certification at the appropriate point in the learning path, alongside the courses that prepare me for it.
+
+Respect my approximate £200-per-certification budget. If a worthwhile certification exceeds it, explain that briefly and identify whether employer funding or postponement is sensible.
+
+Do not recommend a certification merely because it exists. Do not recommend multiple certifications when one is sufficient. Verify that exams and certifications are current and check for announced retirements.
+
+If no certification is worth prioritising at a particular stage, do not force one into the plan. Practical skills and hands-on exercises can take precedence.
+
+## 6. Make the Path Practical and Achievable
+
+Organise the learning path into sequential stages, such as:
+
+- Stage 1: Essential foundations.
+- Stage 2: Core Azure security.
+- Stage 3: Cloud security engineering and automation.
+- Stage 4: Practical consolidation and job readiness.
+
+Change the number of stages if your research supports a better structure.
+
+For every stage, list the courses in the exact order I should complete them. Include the estimated total study time and a clear completion criterion.
+
+Include hands-on exercises alongside the relevant courses, but describe them briefly. The exercises should help me verify that I can actually implement or investigate the security concepts I have learned.
+
+Use a realistic pace of 8 hours per week, with optional extra work for weeks when I have 12 hours available.
+
+Estimate the overall duration in weeks or months, accounting for course time, practical exercises and revision. Clearly label estimates rather than presenting them as guarantees.
+
+## 7. Strict Output Requirements
+
+**The final answer must contain only the learning path and any recommended certifications.**
+
+Use this output structure:
+
+### Stage 1 — [Stage name]
+For each course or resource, provide its order, exact title, provider, direct link, cost, estimated study time and one-sentence purpose.
+
+Include relevant practical exercises immediately after the courses that prepare me for them.
+
+**Certification:** Include a certification only if it is justified at this stage. Otherwise omit this subsection.
+
+**Stage completion:** State briefly what I should be able to do before moving on.
+
+### Stage 2 — [Stage name]
+Use the same structure.
+
+Continue until the recommended learning path is complete.
+
+### Final learning schedule
+Provide a concise summary table with:
+- Stage.
+- Estimated hours.
+- Approximate weeks at 8 hours per week.
+- Expected learning outcome.
+- Certification, if applicable.
+
+### Total commitment
+State the estimated total study hours, approximate duration at 8 hours per week, and total recommended certification exam costs.
+
+Do not include:
+- An executive summary.
+- A career-options comparison.
+- A detailed skills-gap analysis.
+- Job vacancy lists or salary research.
+- A long explanation of why I should choose this career.
+- A separate portfolio project plan.
+- A separate interview preparation guide.
+- A CV or job application strategy.
+- General motivational advice.
+- A list of optional courses that makes the learning path unnecessarily large.
+- Multiple alternative learning paths.
+- Certifications that have little practical value for my target role.
+
+You may use all the research and analysis necessary to produce the best recommendation, but keep that work behind the scenes.
+
+**Final objective:** Give me one clear, researched, cost-conscious, sequential course list that I can start following immediately, with certifications included only where they genuinely add value.
