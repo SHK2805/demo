@@ -21,24 +21,24 @@ Use the following information as the starting point.
 
 ##### Professional experience
 
-• Current role: Junior Cybersecurity Engineer.
-• Approximately one year of experience in a Security Operations Centre (SOC).
-• Experience with proactive threat hunting and continuous security monitoring.
-• Proficiency with Microsoft Sentinel and Kusto Query Language (KQL).
-• Proficiency with Splunk and Search Processing Language (SPL).
-• Solid understanding of cybersecurity operations, security events, alert triage, and incident investigations.
-• Foundational knowledge of core networking concepts and protocols.
-• Foundational knowledge of Identity & Access Management (IAM) and Role-Based Access Control (RBAC).
-• Foundational knowledge of offensive security methodologies and defensive mitigation strategies.
-• Foundational knowledge of cryptographic principles and data encryption.
-• Foundational knowledge of mobile security architectures.
-• Foundational knowledge of Python programming for scripting and automation.
+- Current role: Junior Cybersecurity Engineer.
+- Approximately one year of experience in a Security Operations Centre (SOC).
+- Experience with proactive threat hunting and continuous security monitoring.
+- Proficiency with Microsoft Sentinel and Kusto Query Language (KQL).
+- Proficiency with Splunk and Search Processing Language (SPL).
+- Solid understanding of cybersecurity operations, security events, alert triage, and incident investigations.
+- Foundational knowledge of core networking concepts and protocols.
+- Foundational knowledge of Identity & Access Management (IAM) and Role-Based Access Control (RBAC).
+- Foundational knowledge of offensive security methodologies and defensive mitigation strategies.
+- Foundational knowledge of cryptographic principles and data encryption.
+- Foundational knowledge of mobile security architectures.
+- Foundational knowledge of Python programming for scripting and automation.
 
 ##### Current technical knowledge
 
-• Microsoft Azure: Foundational.
+• Microsoft Azure: None.
 • AWS: Foundational.
-• Microsoft Entra ID: Foundational.
+• Microsoft Entra ID: None.
 • Networking: Foundational.
 • SIEM Engineering: Foundational.
 • Secure Software Development Lifecycle (SSDLC): Theoretical familiarity; seeking practical application.
