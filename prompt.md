@@ -18,25 +18,32 @@ Use current information wherever possible. Research current Microsoft certificat
 
 Use the following information as the starting point.
 
-### Professional experience
-- Current role: Junior Cyber Security Engineer.
-- Approximately one year of experience in a Security Operations Centre (SOC).
-- Experience with threat hunting and security monitoring.
-- Microsoft Sentinel and Kusto Query Language (KQL).
-- Splunk Search Processing Language (SPL).
-- Some understanding of cybersecurity operations, security events, alerts, and investigations.
 
-### Current technical knowledge
-- Microsoft Azure: Basic.
-- AWS: Basic.
-- Microsoft Entra ID: Basic.
-- Networking: Basic.
-- SIEM engineering: Basic.
-- Infrastructure as Code (IaC): No practical experience.
-- Secure Software Development Lifecycle (SSDLC): No practical experience.
-- Governance, Risk and Compliance (GRC): No practical experience.
-- Cloud architecture and cloud security design: Limited practical experience.
-- Machine learning and Generative AI: Basic familiarity.
+##### Professional experience
+
+• Current role: Junior Cybersecurity Engineer.
+• Approximately one year of experience in a Security Operations Centre (SOC).
+• Experience with proactive threat hunting and continuous security monitoring.
+• Proficiency with Microsoft Sentinel and Kusto Query Language (KQL).
+• Proficiency with Splunk and Search Processing Language (SPL).
+• Solid understanding of cybersecurity operations, security events, alert triage, and incident investigations.
+• Foundational knowledge of core networking concepts and protocols.
+• Foundational knowledge of Identity & Access Management (IAM) and Role-Based Access Control (RBAC).
+• Foundational knowledge of offensive security methodologies and defensive mitigation strategies.
+• Foundational knowledge of cryptographic principles and data encryption.
+• Foundational knowledge of mobile security architectures.
+• Foundational knowledge of Python programming for scripting and automation.
+
+##### Current technical knowledge
+
+• Microsoft Azure: Foundational.
+• AWS: Foundational.
+• Microsoft Entra ID: Foundational.
+• Networking: Foundational.
+• SIEM Engineering: Foundational.
+• Secure Software Development Lifecycle (SSDLC): Theoretical familiarity; seeking practical application.
+• Cloud Architecture and Cloud Security Design: Conceptually understood with limited hands-on deployment.
+• Machine Learning and Generative AI: Conceptual awareness of security use cases.
 
 ### Education and certifications
 - Master's degree in computing.
@@ -46,14 +53,14 @@ Use the following information as the starting point.
 ### Location and employment market
 - Target market: United Kingdom.
 - Open to financial services, technology companies, consultancies, government contractors, and other industries.
-- My employer uses Microsoft, so prioritise Microsoft Azure. Focus on mastering Azure do not pivit to other cloud technologies.
+- My employer uses Microsoft, so prioritise Microsoft Azure. Focus on mastering Azure; do not pivot to other cloud technologies.
 - I am willing to consider roles requiring UK security clearance if I am eligible and the opportunity is appropriate. Explain eligibility and clearance considerations without assuming I qualify.
 
 ### Learning constraints
 - Normal study time: 8 hours per week.
 - Maximum study time during a good week: 12 hours.
 - Learning resources available: Udemy subscription, YouTube, Microsoft Learn, vendor documentation, and free online courses.
-- Certification budget: approximately £200 per certification as a soft limit. Employer funding may be available.
+- Certification budget: approximately £200 per certification as a soft limit. Employer funding is available for cloud certifications
 - I prefer a structured learning sequence with practical exercises and measurable outcomes.
 
 ## 2. Define the Target Role Correctly
@@ -78,7 +85,7 @@ Explain the typical responsibilities of an Azure Cloud Security Engineer, includ
 - Backup security, resilience, disaster recovery, and recovery testing.
 - Container, application, API, and workload security where relevant.
 
-Explain which skills are essential for an entry-level or transitioning Cloud Security Engineer, which are expected at intermediate level, and which are more appropriate for senior engineers or architects.
+Explain which skills I should master as a Cloud Security Engineer, which are expected at an intermediate level, and which are more appropriate for senior engineers or architects.
 
 Do not turn the roadmap into an attempt to learn every Azure service. Prioritise the services and skills most relevant to real cloud security engineering jobs.
 
@@ -92,7 +99,6 @@ Research real, recent UK vacancies for roles such as:
 - Microsoft Cloud Security Engineer.
 - Cloud Security Consultant.
 - Security Engineer with Azure responsibilities.
-- SOC Engineer or Security Engineer roles that provide a credible transition into cloud security.
 
 Where practical, examine approximately 15–25 relevant vacancies. If that sample is not achievable, state the actual sample size and limitations rather than inventing data.
 
@@ -101,7 +107,7 @@ For each major skill or requirement, explain:
 1. How frequently it appears in the vacancies you examined.
 2. Whether it is essential, desirable, or specific to particular employers.
 3. Whether it is likely to be tested during interviews.
-4. How I can demonstrate competence without already having a cloud security job.
+4. How can I demonstrate competence without already having a cloud security job?
 5. Which requirements are realistic for my first transition and which belong to more senior roles.
 
 Investigate:
@@ -117,7 +123,7 @@ Use direct links to actual vacancies and reputable salary sources. Do not invent
 
 ## 4. Perform a Detailed Skills Gap Analysis
 
-Compare my existing skills against the requirements of a credible Cloud Security Engineer.
+Compare my existing skills against the requirements for a credible Cloud Security Engineer role.
 
 Create a prioritised table with these columns:
 
@@ -217,7 +223,7 @@ Prioritise:
 1. Well-maintained Udemy courses as I have a subscription.
 2. High-quality YouTube tutorials and practical labs.
 3. Microsoft Learn and official Microsoft documentation.
-4. Microsoft Azure Architecture Center and Cloud Adoption Framework where relevant.
+4. Microsoft Azure Architecture Centre and Cloud Adoption Framework where relevant.
 5. Microsoft security documentation and hands-on exercises.
 6. UK National Cyber Security Centre (NCSC) cloud security guidance.
 7. Other free resources where they offer clear value.
@@ -279,34 +285,52 @@ Do not encourage me to expose credentials, secrets, personal data, or vulnerable
 
 Distinguish between a portfolio demonstration and production-grade enterprise implementation. Never suggest that a lab proves experience managing production systems.
 
-## 8. Connect My Current SOC Role to Cloud Security Engineering
 
-This is a critical part of the roadmap.
+## 8. Strategic Skill Bridging & Internal Workplace Opportunities
 
-Recommend realistic opportunities to gain relevant experience in my current employment, where access and responsibilities permit.
+This module bridges my one year of SOC operations (Sentinel, KQL, Splunk, Alert Triage) and foundational knowledge (Networking, RBAC, Crypto, Python) directly into practical Azure Cloud Security Engineering experience.
+Recommend realistic, high-impact opportunities to gain relevant experience within my current employment, strictly respecting standard privilege boundaries and segregation of duties.
 
-Examples might include:
-- Investigating Azure-related alerts.
-- Learning how Entra ID sign-in logs and audit logs support investigations.
-- Writing or improving Sentinel analytics rules for cloud threats.
-- Mapping detection opportunities to preventive Azure controls.
-- Reviewing cloud security posture findings.
-- Participating in incident response involving cloud workloads.
-- Automating repetitive investigations or enrichment tasks.
-- Documenting a cloud threat scenario and its mitigation.
-- Supporting a security assessment or cloud security review.
-- Requesting supervised exposure to Azure subscriptions, policies, or identity controls.
+#### High-Value Workplace Opportunities
 
-For each opportunity, explain:
-- How to approach my manager or cloud security team.
-- What I can reasonably volunteer to do.
-- What deliverable would demonstrate value.
-- How to record measurable impact.
-- How to describe the experience honestly on my CV and in interviews.
 
-Do not assume I have permission to administer production environments. Clearly distinguish safe learning activities, supervised work, and responsibilities requiring formal authorisation.
+##### Log Analytics & Identity Operations
 
-If my current role offers limited Azure exposure, provide an alternative strategy using labs, internal projects, and external applications.
+• Deep-Dive Entra ID Log Analysis: Transitioning from generic alert triage to hunting within SigninLogs, AuditLogs, and NonInteractiveUserSignInLogs to analyze authentication anomalies and conditional access bypass attempts.
+• RBAC & Least Privilege Auditing: Reviewing active role assignments, highly privileged groups, and service principal permissions to identify potential privilege escalation paths.
+
+##### Detection & SIEM Engineering
+
+• Cloud Threat Detection Authoring: Writing, tuning, or improving Microsoft Sentinel analytics rules and Splunk correlation searches (using KQL and SPL) specifically targeted at cloud-native attack vectors like token theft or resource deployment anomalies.
+• Automated Enrichment Scripting: Utilising Python to write local scripts or automate repetitive alert-enrichment tasks, API lookups, or threat intelligence matching for cloud-related incidents.
+
+##### Posture Management & Architecture
+
+• Network & Security Posture Review: Analysing Microsoft Defender for Cloud recommendations, open Network Security Group (NSG) rules, or unencrypted storage assets to map defensive configurations against the MITRE ATT&CK framework.
+• Cloud Incident Response & Documentation: Participating in or documenting post-incident reviews for cloud-focused alerts, explicitly mapping defensive mitigations back to Azure preventive controls.
+
+##### Implementation Blueprint Per Opportunity
+
+For every recommended opportunity, explicitly provide a structured execution plan containing:
+1. The Approach: Strategic, low-friction framing to pitch this to my manager or the cloud engineering team without sounding demanding.
+2. The Volunteer Task: What I can reasonably offer to execute independently without needing elevated privileges.
+3. The Deliverable: A tangible artefact (e.g., a documentation draft, a tuned KQL query, an architecture diagram) that proves immediate business value.
+4. The Metric: How to capture this as a measurable impact statement (e.g., reduced false positives by X%, automated Y hours of manual enrichment).
+5. The CV Translation: How to articulate this experience honestly, legally, and compellingly on a resume or in a technical interview without inflating my access level.
+
+##### Governance & Operational Boundaries
+
+Clearly differentiate between levels of environment interaction to protect production integrity:
+• Safe Learning Activities (Read-Only/Local): Querying existing logs, drafting documentation, local Python prototyping, and testing logic in personal/dev environments.
+• Supervised Actions (Shadowing/Paired Ops): Screen-sharing with cloud administrators during change windows or assisting under direct supervision.
+• Authorised Responsibilities (Privileged): Production modifications requiring formal Change Advisory Board (CAB) approval and temporary Just-In-Time (JIT) access.
+
+Contingency Strategy for Low-Exposure Environments
+
+If my current role provides highly restricted or zero live Azure exposure, provide a parallel "Shadow Lab" strategy that mirrors enterprise cloud environments using:
+• Personal/Developer Tenants: Building a free Microsoft 365/Entra developer subscription to generate malicious traffic and test defensive controls.
+• Infrastructure as Code (IaC) Labs: Deploying secure and insecure Azure network topologies via local Terraform or ARM templates to master cloud networking and cryptography concepts visually.
+• Open-Source Projects: Contributing to public cloud security detection repositories or building personal Python-based cloud configuration auditors.
 
 ## 9. Build a Realistic Career Timeline
 
