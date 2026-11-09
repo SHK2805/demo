@@ -1,124 +1,240 @@
-### Explanation: Why Pre-Installed Apps Are Not Deleted During Enrolment
+================================================================================
+PRINCIPAL AWS SECURITY ARCHITECT & AI SECURITY INTERVIEW PREPARATION GUIDE
+================================================================================
+Target Role: Senior / Principal System Security Architect (Barclays)
+Target Level: ~10 Years Experience (Cloud, AWS, AI Architecture, Risk Evaluation)
+Baseline Study Budget: 27 Hours Baseline (+ 5 Hours Extension)
 
-Apple’s iOS operating system architecture embeds core pre-installed system applications (such as Safari, Messages, Settings, and default utilities) within the **Sealed System Volume (SSV)**, which is cryptographically signed and read-only. MDM enrolment—especially under a BYOD (Bring Your Own Device) or User Enrolment model—cannot modify, uninstall, or delete built-in system apps. Furthermore, BYOD privacy boundaries intentionally protect existing personal applications and pre-installed software; MDM policies only govern corporate work profiles and managed applications, leaving pre-installed or personal apps completely intact.
+--------------------------------------------------------------------------------
+DOCUMENT CONTROL & METADATA
+--------------------------------------------------------------------------------
+Document Type: Master Study Resource & Interview Prep Guide
+Version: v2.0 (Interview-Optimized)
+Date: 2026-11-09
+Focus Areas: Technical Architecture, Trust Boundaries, Risk Decomposition, 
+             Bedrock / Agentic AI Security, AWS Data Perimeters, Defense-in-Depth.
 
----
+================================================================================
+TOPIC T01: SECURITY ARCHITECTURE REVIEW METHODOLOGY & CHANGE GATING
+================================================================================
+[Core Guidance]
+- Shift security from manual gatekeeping to automated policy-as-code change-gating embedded in CI/CD pipelines.
+- Focus reviews on Data Flow Diagrams (DFDs), trust boundaries (AWS accounts, RAM cross-account roles, VPCs), and key policies.
+- Clearly separate technical risk evaluation from enterprise governance: governance handles policy oversight, security architecture evaluates technical risk, threats, and control effectiveness.
 
-## 1. Hunting Hypothesis & Risk
+[Recommended Resources & Search Terms]
+- YouTube Search: "AWS re:Invent security architecture review", "Scale security architecture AWS", "Threat modeling enterprise AWS architecture"
+- Authoritative Channels: AWS Events, AWS Online Tech Talks, OWASP Foundation
+- Primary Docs: AWS Well-Architected Framework (Security Pillar), NIST SP 800-37 (Risk Management Framework)
 
-* **Hypothesis:** A threat actor or compromised insider with valid Entra ID credentials and completed MFA is attempting to use developer tools (such as Xcode and iOS simulators) or virtualized/emulated iOS devices to bypass device compliance controls, fraudulently register an unauthorized device, and provision MFA passkeys for persistent access.
-* **Risks:**
-* Bypassing hardware-backed device compliance and conditional access policies using emulated hardware parameters.
-* Unauthorized generation or theft of phishing-resistant credentials (FIDO2 / passkeys) tied to an unmanaged or attacker-controlled virtual endpoint.
-* Expanding attacker foothold within corporate cloud resources without triggering traditional device-health telemetry due to the absence of Mobile Threat Defense (MTD) tools.
-
-
-
----
-
-## 2. Where to Look (Console Navigational Guide)
-
-* **Microsoft Entra ID Portal:**
-* **Path:** `Identity` > `Sign-in logs` (to inspect authentication attempts, risk detections, device ID, IP address `3.11.236.40`, and user agent strings matching the timestamp `22/10/2026 10:52 UTC`).
-* **Path:** `Identity` > `Users` > Select user `CLIENT\A12345` > `Authentication methods` (to audit registered passkeys, FIDO2 security keys, or MFA device registrations).
-
-
-* **Microsoft Intune Admin Center:**
-* **Path:** `Devices` > `Enrollment` > `Device enrollment restrictions` (to review platform restrictions blocking personal or unrecognized iOS client types).
-* **Path:** `Devices` > `Audit logs` (to review failed or blocked iOS device registration/enrolment events for the device name `iPad`).
-
-
-
----
-
-## 3. Where to Look for Profile (Intune Profile Restrictions)
-
-* **Intune Device Platform Restrictions & Compliance Policies:**
-* **Path:** `Intune Admin Center` > `Devices` > `Enrollment` > `Device platform restrictions` > Select `iOS/iPadOS restrictions`. Check configuration settings under **Platform settings** for `Personally owned devices` (set to `Block` or `Allow`) and minimum/maximum iOS version constraints.
-* **Path:** `Intune Admin Center` > `Devices` > `iOS/iPadOS` > `Compliance policies` > Select the active policy to verify hardware integrity checks (blocking jailbroken/rooted or emulated devices).
+[Verbal Interview Script]
+Question: "How do you perform a security architecture review and decide whether a solution is production ready?"
+Answer: "I structure architecture reviews around data flow analysis and trust boundary decomposition. First, I examine the DFD to identify where data crosses administrative or security boundaries—such as public internet to VPC, or tenant-isolated application tiers. Second, I evaluate risk by assessing likelihood and technical impact, ensuring preventive controls (IAM least-privilege, network perimeters) take precedence over detective alerting. Finally, I determine production readiness by verifying that residual risks are formally documented, automated policy-as-code gates are passing, and any technical risk acceptance is explicitly signed off against enterprise risk thresholds."
 
 
-* *Jira Note Requirement:* Since Intune audit logs and Entra sign-in logs record the authentication and enrollment failure, but do *not* capture local Xcode simulator logs or IDE-level app installation errors (as device-level logs are not sent to the SIEM and no MTD is installed), this absence of direct device-side installation telemetry must be explicitly documented as a comment in the Jira ticket:
-> **Jira Comment:** *"Corporate SIEM, Defender, Entra, and Intune logs confirm the authentication and enrollment failure, but do not capture direct local device logs or Xcode installation telemetry due to lack of MTD and absence of device log forwarding in a BYOD context."*
+================================================================================
+TOPIC T11: AI SECURITY RISK ASSESSMENT FRAMEWORKS & TECHNICAL RISK EVALUATION
+================================================================================
+[Core Guidance]
+- Decompose AI architecture into 5 layers: UI, Orchestration/Agents, Foundation Models, Retrieval (Vector DB), Execution Sinks.
+- Key Workloads:
+  * Amazon Bedrock: Guardrails, model isolation, cross-region resilience.
+  * Agentic AI: Scoped IAM execution roles, loop prevention, human-in-the-loop gates for destructive calls.
+  * RAG Systems: Vector DB isolation (OpenSearch Serverless), chunk-level metadata tagging, dynamic JWT user-filtering.
+  * MCP Architecture: Inter-server TLS, tool poisoning defense, input/output schema validation.
+  * SaaS AI: AWS PrivateLink endpoints, egress data filtering, zero-data-retention verification.
+
+[Recommended Resources & Search Terms]
+- YouTube Search: "AWS re:Invent Generative AI security Bedrock", "OWASP Top 10 for LLMs deep dive", "AI security risk assessment architecture"
+- Authoritative Channels: AWS Events, OWASP Foundation, Defcon
+- Primary Docs: AWS Secure Generative AI on AWS, OWASP Top 10 for Large Language Models, NIST AI 100-1 (AI RMF)
+
+[Verbal Interview Script]
+Question: "How would you perform a security assessment of an AI solution utilizing Bedrock, RAG, and autonomous agents?"
+Answer: "I perform a structured threat assessment by decomposing the architecture into its core functional layers. For Bedrock and foundation models, I verify input/output guardrails and prompt engineering boundaries. For RAG systems, I ensure vector database queries enforce fine-grained metadata filtering based on user-context JWT claims, preventing horizontal data leakage. For autonomous agents, I treat the LLM as an untrusted reasoning engine: its execution role is strictly scoped using least-privilege IAM policies, and any destructive tool call requires a deterministic, programmatic authorization token generated outside the LLM. Finally, I map these vectors to preventive and detective controls, establishing clear production-readiness criteria."
 
 
+================================================================================
+TOPIC T02: THREAT MODELLING WORKFLOW & LLM THREAT CATALOGUE
+================================================================================
+[Core Guidance]
+- Apply STRIDE to LLM vectors: Tampering (Prompt Injection), Denial of Service (Denial of Wallet / Token Exhaustion), Elevation of Privilege (Excessive Agency).
+- Architect defenses against indirect prompt injection by isolating retrieved untrusted data within strict XML delimiters and decoupling retrieval from downstream execution sinks.
 
----
+[Recommended Resources & Search Terms]
+- YouTube Search: "Threat modeling LLM applications OWASP", "Prompt injection attack vectors architecture"
+- Authoritative Channels: OWASP Foundation, Black Hat, Defcon
+- Primary Docs: OWASP LLM Application Security Verification Standard (LLMASVS), MITRE ATLAS
 
-## 4. Kibana / Elasticsearch Hunting Searches
-
-*(Note: In environments utilizing Elasticsearch/Kibana alongside cloud event shippers, use the following direct log queries to target authentication and enrollment failures.)*
-
-* **Query 1 (Entra Sign-ins from Suspicious IP / User):**
-```json
-{
-  "query": {
-    "bool": {
-      "must": [
-        { "match": { "userPrincipalName": "A12345" } },
-        { "match": { "clientAppUsed": "Browser" } }
-      ],
-      "filter": [
-        { "range": { "@timestamp": { "gte": "2026-10-22T10:00:00Z", "lte": "2026-10-22T11:30:00Z" } } }
-      ]
-    }
-  }
-}
-
-```
+[Verbal Interview Script]
+Question: "How do you architect defenses against indirect prompt injection in an enterprise RAG application?"
+Answer: "We assume all external retrieved content is hostile. Architecturally, retrieved text is enclosed in strict XML delimiters (<untrusted_data>) and processed through intermediate parsers before reaching the primary prompt context. Furthermore, downstream execution sinks treat LLM output as untrusted string data, utilizing schema validation to prevent code execution."
 
 
-* **Query 2 (Failed Device Registration / Enrolment Anomalies):**
-```json
-{
-  "query": {
-    "bool": {
-      "must": [
-        { "match": { "event.category": "iam" } },
-        { "match": { "event.outcome": "failure" } }
-      ],
-      "filter": [
-        { "term": { "source.ip": "3.11.236.40" } }
-      ]
-    }
-  }
-}
+================================================================================
+TOPIC T04: AI IDENTITY ARCHITECTURE, AUTHORIZATION PATTERNS, & MCP
+================================================================================
+[Core Guidance]
+- Machine-to-machine trust via IAM execution roles and short-term STS credentials.
+- Propagate user identity (JWT claims via Cognito/OIDC) directly to backend services rather than trusting the LLM to manage entitlement checks.
+- Enforce MCP server container isolation (AWS Fargate), mTLS, and strict input/output schema validation to mitigate tool poisoning and confused deputy exploits.
 
-```
+[Recommended Resources & Search Terms]
+- YouTube Search: "AWS IAM advanced architectural patterns", "Zero trust authorization microservices AWS", "Secure AI agent tool invocation architecture"
+- Authoritative Channels: AWS Events, AWS Online Tech Talks
+- Primary Docs: AWS IAM Best Practices, Model Context Protocol (MCP) Security Guidelines
 
+[Verbal Interview Script]
+Question: "How do you design authorization for an AI agent invoking tools via the Model Context Protocol?"
+Answer: "The AI agent operates under strict least privilege. When invoking an MCP tool, it passes the end-user's signed JWT token. The MCP server independently validates token claims and enforces deterministic access control. The LLM never decides authorization."
 
 
----
+================================================================================
+TOPIC T08: CLOUD SECURITY DECISIONS, DATA PERIMETERS, & EGRESS DEFENSE
+================================================================================
+[Core Guidance]
+- Establish cloud data perimeters using AWS Organizations SCPs (`aws:PrincipalOrgID`), S3 resource policies, and VPC endpoint policies.
+- Eliminate public internet traversal for third-party AI APIs using AWS PrivateLink, AWS Network Firewall, and Route 53 Resolver DNS Firewall.
 
-## 5. Step-by-Step Investigation Checklist
+[Recommended Resources & Search Terms]
+- YouTube Search: "AWS Data Perimeter architectural patterns re:Invent", "AWS PrivateLink security best practices"
+- Authoritative Channels: AWS Events, AWS Online Tech Talks
+- Primary Docs: Building a Data Perimeter on AWS, AWS PrivateLink Guidance
 
-1. **Verify Authentication & MFA Context:** Open Microsoft Entra ID Sign-in logs for user `CLIENT\A12345` around `22/10/2026 10:52 UTC`. Confirm whether the IP `3.11.236.40` corresponds to a known corporate VPN, residential network, or cloud hosting provider.
-2. **Inspect Entra Authentication Methods:** Check if any new FIDO2 security keys, passkeys, or Microsoft Authenticator methods were successfully registered or modified during or immediately after this timestamp.
-3. **Check Intune Enrolment Logs:** Navigate to Intune Audit Logs to confirm the blocked enrollment attempt for device name `iPad` under user `CLIENT\A12345`.
-4. **Validate Local Telemetry Gap & Document Jira Comment:** Verify that SIEM/Defender logs *do not* contain direct evidence of the local Xcode installation attempt or simulator runtime errors. Document this limitation explicitly as a comment in Jira.
-5. **Review Conditional Access Policies:** Ensure that policies enforcing compliant devices or approved client apps successfully blocked the unauthorised access attempt.
-6. **Remediate & Notify:** If credential compromise is suspected, force a password reset, revoke existing refresh tokens, and require re-authentication with strong MFA.
-
----
-
-## 6. Splunk Hunting Queries
-
-* **Query 1: Correlating Entra Sign-In and User Activity for User A12345 from IP 3.11.236.40**
-```splunk
-index=entra_logs userPrincipalName="*A12345*" src_ip="3.11.236.40" 
-| eval timestamp=strftime(_time, "%Y-%m-%d %H:%M:%S") 
-| table timestamp, userPrincipalName, src_ip, appDisplayName, status.errorCode, conditionalAccessStatus
-
-```
+[Verbal Interview Script]
+Question: "How do you prevent a compromised AI workload from exfiltrating data to external endpoints?"
+Answer: "We enforce defense-in-depth: organizational SCPs restrict data flows to trusted accounts; S3 and KMS policies deny external access; private VPCs route traffic through PrivateLink rather than NAT gateways; and DNS Firewall blocks unauthorized external domains."
 
 
-* **Query 2: Identifying Failed Device Registrations or MDM Enrolment Failures**
-```splunk
-index=intune_audit_logs operationName="Enrol device" result="Failure" userPrincipalName="*A12345*"
-| eval timestamp=strftime(_time, "%Y-%m-%d %H:%M:%S")
-| table timestamp, userPrincipalName, deviceName, result, failureReason
+================================================================================
+TOPIC T07: SECURE RAG & SUPPLY CHAIN SECURITY
+================================================================================
+[Core Guidance]
+- Sandbox document ingestion pipelines in ephemeral subnets.
+- Enforce dynamic metadata filtering (tenant ID, ACLs) at the vector database layer (Amazon OpenSearch Serverless) during k-NN queries.
 
-```
+[Recommended Resources & Search Terms]
+- YouTube Search: "Secure RAG architecture AWS Bedrock OpenSearch", "Vector database security enterprise"
+- Authoritative Channels: AWS Events, OWASP Foundation
+- Primary Docs: Amazon OpenSearch Service Security Guide, OWASP GenAI Security Project
+
+[Verbal Interview Script]
+Question: "How do you prevent horizontal data leakage across tenants in a shared vector database?"
+Answer: "Every document chunk is indexed with cryptographic metadata attributes. At retrieval time, verified user JWT group claims are translated into mandatory query filters enforced directly by OpenSearch before ranking, ensuring unauthorized chunks never enter the LLM context."
 
 
-In the provided scenario where a threat actor attempted to use an Xcode-driven environment or virtualized/emulated iOS device to provision or use an MFA passkey, the attempt failed.The blocking of the MFA passkey on an iOS emulator/virtual environment is driven by a combination of strict hardware-security dependencies enforced by Apple and enterprise cloud security policy configurations.Why and How It Is Blocked1. Absence of the Hardware Secure EnclaveThe Technical Requirement: FIDO2 / WebAuthn-based passkeys on iOS rely fundamentally on the physical Secure Enclave—a dedicated, hardware-isolated cryptographic coprocessor embedded inside physical Apple silicon chips (A-series or M-series processors). Private keys generated for passkeys are bound directly to this hardware and cannot be extracted or software-emulated.   Why It Fails: An iOS simulator runs as a software abstraction layer on a host macOS machine (often on standard hardware or cloud-hosted macOS nodes). It lacks a simulated or virtualised Secure Enclave capable of passing hardware-level attestation. When an application attempts to register or invoke a platform passkey via the AuthenticationServices framework (ASAuthorizationController), the underlying cryptographic assertion fails because the hardware root-of-trust does not exist.2. Entra ID and Conditional Access Device AttestationThe Technical Requirement: Modern enterprise authentication policies configured in Microsoft Entra ID often require phishing-resistant MFA (such as passkeys or FIDO2 security keys) coupled with Device Compliance enforced via Microsoft Intune.Why It Fails: When the simulated client attempts to authenticate or register a passkey, Microsoft Entra evaluates the device state token. Because the device is an unmanaged, unrecognized simulator signature failing MDM compliance checks (and unable to present a valid hardware attestation statement), Entra ID's Conditional Access engine blocks the issuance or usage of the credential.3. Xcode & Application Container RestrictionsThe Technical Requirement: To provision a platform passkey, iOS requires a cryptographically verified application bundle tied to an Associated Domains entitlement (webcredentials) linked securely to the verified domain of the service provider.   Why It Fails: As noted in the attack description, the attacker failed to properly sideload or install the authenticator application via Xcode. Unsigned, side-loaded, or improperly provisioned binaries built via local developer tools cannot satisfy iOS entitlement validation for enterprise credential providers, resulting in an immediate API-level failure (ASAuthorizationError).Summary for Threat HuntersAn attacker cannot successfully harvest, create, or use a hardware-bound iOS passkey inside a virtual or emulated iOS container. The architecture fails because software cannot simulate the Secure Enclave, and cloud identity providers (Entra ID) reject un-attested device states.
+================================================================================
+TOPIC T05: IMPROPER OUTPUT HANDLING & DEFENSIVE SINKS
+================================================================================
+[Core Guidance]
+- Treat all LLM outputs as untrusted string inputs.
+- Enforce strict JSON / Pydantic schema validation, parameterized SQL query construction, and sandboxed execution environments (AWS Lambda / Fargate with read-only filesystems).
+
+[Recommended Resources & Search Terms]
+- YouTube Search: "Application security improper output handling LLM", "Secure coding practices AI integration"
+- Authoritative Channels: OWASP Foundation, Black Hat
+- Primary Docs: OWASP Top 10: Improper Output Handling, AWS Lambda Security Best Practices
+
+[Verbal Interview Script]
+Question: "How do you secure execution sinks when an LLM generates database queries or code?"
+Answer: "We prohibit direct string execution. SQL queries use parameterized structures where the LLM only provides variable parameters. Code execution occurs within ephemeral, resource-constrained containers with zero network access."
+
+
+================================================================================
+TOPIC T06: AI-SPECIFIC INCIDENT RESPONSE & CONTAINMENT
+================================================================================
+[Core Guidance]
+- Execute rapid containment using emergency IAM inline deny policies with the `aws:TokenIssueTime` condition key to instantly invalidate temporary security tokens.
+- Automate parallel log preservation (Bedrock logs, CloudTrail, VPC Flow Logs) to immutable S3 vaults protected by S3 Object Lock.
+
+[Recommended Resources & Search Terms]
+- YouTube Search: "AWS incident response automation Lambda", "Cloud forensics and containment AWS"
+- Authoritative Channels: AWS Events, AWS Online Tech Talks
+- Primary Docs: AWS Security Incident Response Guide, Automated Incident Response in the Cloud
+
+[Verbal Interview Script]
+Question: "How do you contain a compromised AI agent exhibiting runaway loops or data exfiltration?"
+Answer: "We trigger automated Lambda playbooks that apply an emergency IAM inline deny policy using aws:TokenIssueTime to invalidate active tokens instantly. In parallel, forensic telemetry is snapshotted to an immutable S3 vault protected by Object Lock."
+
+
+================================================================================
+TOPIC T09: AI OBSERVABILITY, MONITORING, & TELEMETRY
+================================================================================
+[Core Guidance]
+- Centralize telemetry streaming across Amazon Security Lake and OpenSearch.
+- Monitor infrastructure anomalies via Amazon GuardDuty and track token consumption velocity to flag Denial of Wallet attacks and prompt flooding.
+
+[Recommended Resources & Search Terms]
+- YouTube Search: "Amazon Security Lake architecture and integration", "AWS GuardDuty advanced threat detection re:Invent"
+- Authoritative Channels: AWS Events, AWS Online Tech Talks
+- Primary Docs: Amazon Security Lake User Guide, Amazon GuardDuty User Guide
+
+[Verbal Interview Script]
+Question: "How do you monitor distributed LLM workloads to detect prompt injection and token abuse?"
+Answer: "We stream Bedrock invocation logs into Amazon Security Lake and ingest structured agent reasoning traces into OpenSearch. Real-time SIEM rules track token velocity anomalies and flag suspicious multi-turn prompt injection patterns."
+
+
+================================================================================
+TOPIC T10: SUPPORTING SECURITY DOMAINS (SAAS, CONTACT CENTRE, SDLC)
+================================================================================
+[Core Guidance]
+- Amazon Connect Omnichannel Security: Real-time PII redaction on transcriptions, KMS CMKs, IAM Identity Center SAML/SCIM integration.
+- Deploy SaaS Security Posture Management (SSPM) tools to audit third-party SaaS AI integrations.
+
+[Recommended Resources & Search Terms]
+- YouTube Search: "Amazon Connect security architecture best practices", "AWS IAM Identity Center SCIM integration"
+- Authoritative Channels: AWS Events, AWS Online Tech Talks
+- Primary Docs: Amazon Connect Administrator Guide, AWS IAM Identity Center User Guide
+
+[Verbal Interview Script]
+Question: "How do you secure an Amazon Connect contact center integrating generative AI transcription and customer bots?"
+Answer: "Voice streams are scrubbed of PII by automated redaction filters before transcription. Bedrock bots operate in isolated VPCs, accessing backend systems via rate-limited API gateways. Agent access is federated via IAM Identity Center with automated SCIM provisioning."
+
+
+================================================================================
+TOPIC T03: TECHNICAL PREVENTIVE VS. DETECTIVE TRADE-OFFS
+================================================================================
+[Core Guidance]
+- Evaluate architectural trade-offs: Preventive controls (Bedrock Guardrails, SCPs) block threats upfront but carry latency/false-positive risks. Detective controls (GuardDuty, SIEM analytics) provide flexible anomaly detection for stochastic threats.
+- Deploy a hybrid architecture: preventive controls guard hard boundaries, detective controls capture semantic evasion attempts.
+
+[Recommended Resources & Search Terms]
+- YouTube Search: "Preventative vs detective security controls AWS architecture", "Designing resilient security guardrails AWS"
+- Authoritative Channels: AWS Events, AWS Online Tech Talks
+- Primary Docs: AWS Well-Architected Framework (Security Pillar), AWS Security Reference Architecture (SRA)
+
+[Verbal Interview Script]
+Question: "How do you decide between preventive and detective controls for non-deterministic threats like prompt injection?"
+Answer: "We use preventive controls (Bedrock Guardrails) at critical transaction boundaries to block superficial attacks. However, because prompt injection is semantic and evolving, we rely on detective controls (semantic monitoring, SIEM analytics) for real-time behavioral anomaly detection."
+
+
+================================================================================
+SCENARIO PREPARATION MODULES (SC01 - SC05)
+================================================================================
+SC01: Customer Service Bot & Core Banking APIs
+- Focus: Omnichannel Amazon Connect trust boundaries, PII redaction, step-up auth (MFA/biometric) before transactional API execution, API Gateway WAF.
+
+SC02: Multi-Tenant Data Platform & SaaS Integration
+- Focus: Data perimeter (`aws:PrincipalOrgID`), AWS PrivateLink for SaaS AI, per-tenant KMS Customer Managed Keys, SCIM/SSO, SSPM.
+
+SC03: Enterprise RAG Assistant & Metadata Filtering
+- Focus: Ingestion metadata tagging, dynamic user-context JWT metadata filtering enforced directly inside vector database k-NN queries.
+
+SC04: AI Monitoring, Detection, & Incident Response
+- Focus: Differentiating GuardDuty (control-plane) from SIEM application logs; rapid IAM role containment via `aws:TokenIssueTime`; immutable S3 Object Lock vaults.
+
+SC05: Remediating an Unreviewed Agentic Deployment
+- Focus: Emergency network containment (VPC Security Group / Network ACL shutdown), IAM deny policy application, forensic log capture, retrofitting CloudFormation Guard policy-as-code in CI/CD pipelines.
+
+
+================================================================================
+EXTENSION TOPICS (EXT-1, EXT-2 - SECONDARY PRIORITY)
+================================================================================
+Note: Study only after completing T01-T11 and SC01-SC05.
+
+Ext-1: Advanced Threat Hunting for Autonomous Agents
+- Focus: Multi-turn prompt injection detection and silent exfiltration hunting (correlating Bedrock token counts with VPC flow logs and DNS queries).
+
+Ext-2: Control Plane Hardening & Automated CI/CD Gating
+- Focus: Automated policy-as-code checks (CloudFormation Guard / OPA) and pre-production AI agent red-teaming in build pipelines.
+================================================================================
