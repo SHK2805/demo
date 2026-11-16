@@ -1,11 +1,10 @@
-
 ## HUNTING HYPOTHESIS & RISK
 
-* **Hunting Hypothesis:** Users can successfully enrol unapproved or non-compliant mobile operating systems (such as Android 14 on a Google Pixel 8a) into the corporate Microsoft Intune BYOD work profile framework, potentially bypassing baseline passkey/MFA device-integrity guardrails if enrollment restrictions are misconfigured or unassigned.
+* **Hunting Hypothesis:** Users can enrol and utilize multiple biometric profiles (such as alternate fingerprints) on a corporate BYOD Android device, allowing secondary or unauthorized individuals to successfully authenticate against device-bound FIDO2/MFA passkeys tied to the primary user account.
 * **Associated Risks:**
-* Enrolment of unapproved OS versions can expose corporate infrastructure to platform-specific vulnerabilities or unpatched exploit chains.
-* Weakened or non-compliant device security postures undermine Microsoft Entra ID Phishing-Resistant MFA Passkey trust chains, permitting unauthorized token issuance on compromised hardware.
-* Lack of endpoint telemetry (no Mobile Threat Defense, no Defender for Mobile Endpoint, and no local device logs forwarded to SIEM) limits visibility into whether the underlying OS environment is rooted, bootloader-unlocked, or running customized ROMs.
+* Compromises non-repudiation and identity accountability for corporate resources protected by phishing-resistant passkeys.
+* Permits physical or proxy sharing of corporate access tokens if an unauthorized individual registers their fingerprint on an active work-profile-enrolled device.
+* Lack of local device telemetry (no Mobile Threat Defense, no MDE for Endpoint, and no local device event forwarding to SIEM) leaves enterprise security teams completely blind to local biometric additions or hardware-level enrollment changes.
 
 
 
@@ -14,17 +13,16 @@
 ## WHERE TO LOOK (CONSOLE NAVIGATIONAL GUIDE)
 
 * **Microsoft Intune Admin Center:**
-* Navigate to **Devices** > **Device onboarding** > **Enrollment** > **Device platform restrictions** to inspect OS version boundary configurations.
-* Navigate to **Devices** > **By platform** > **Android** > **Android enrollment** > **Personally-owned work profile** to review active BYOD constraints.
+* Navigate to **Devices** > **Configuration profiles** to review compliance and device configuration policies enforcing biometric restrictions or device lock requirements.
+* Navigate to **Devices** > **By platform** > **Android** > **Compliance policies** to verify whether baseline settings require lock screen complexity or restrict secondary biometric definitions.
 
 
 * **Microsoft Entra Admin Center:**
-* Navigate to **Identity** > **Monitoring & health** > **Sign-in logs** to correlate user session authentication and device registration metadata.
-* Navigate to **Identity** > **Devices** > **All devices** to verify the object record corresponding to `Pixel_8A` (`AndroidForWork_12`).
+* Navigate to **Identity** > **Monitoring & health** > **Sign-in logs** to inspect authentication events, Multi-Factor Authentication methods used, and device context attributes around `26/10/2026 10:28 UTC`.
 
 
 * **Splunk / SIEM Enterprise Logs:**
-* Query cloud-native audit channels tracking identity authentication pipelines, API calls, and directory changes originating from `CLIENT\A12345`. *(Note: Direct local device installation attempts, debug traces, or low-level OS exploit execution logs are absent from SIEM ingest due to BYOD telemetry limitations; record this visibility gap explicitly as a comment in Jira).*
+* Query identity and authentication streams tracking token issuance and interactive login claims for user `CLIENT\A12345`. *(Note: Local device settings changes—such as registering a new fingerprint in Android OS settings—do not generate network logs or cloud audit events and are invisible to Splunk or Defender. Record this visibility gap explicitly as a comment in Jira).*
 
 
 
@@ -35,11 +33,10 @@
 * **Microsoft Intune Admin Center Console Path:**
 1. Open the **Intune admin center** (`intune.microsoft.com`).
 2. Select **Devices** from the left-hand menu.
-3. Under *Device onboarding*, click **Enrollment**.
-4. Select the **Device platform restrictions** tab.
-5. Locate and open the applicable priority restriction policy assigned to standard users (e.g., *Default* or custom *BYOD Android Restrictions*).
-6. Click **Properties** next to *Platform settings*.
-7. Inspect the **Android Enterprise (work profile)** row parameters, specifically verifying the configured **Minimum OS version** and **Maximum OS version** attributes. *(Note: If the minimum version threshold is set too low—such as allowing Android 14 when policy intended restriction—this configuration gap explains why the Pixel 8a successfully enrolled).*
+3. Under *Manage devices*, click **Configuration**.
+4. Select the active **Device Restriction** or **Compliance Policy** assigned to Android Enterprise work profiles.
+5. Click **Settings** and expand the **Device Experience** or **Password / Passcode** blocks.
+6. Inspect parameters governing screen unlock security and biometric authentication constraints. *(Note: Standard Android Enterprise work profile controls manage corporate container security, but natively governing local OS-level biometric enrollment limits on a personal BYOD device requires custom OMA-URI policies or manufacturer-specific Knox/OEM configurations, as stock Android permits multiple biometric profiles by design).*
 
 
 
@@ -59,7 +56,7 @@
         },
         {
           "match": {
-            "event.category": "iam"
+            "event.category": "authentication"
           }
         }
       ],
@@ -67,8 +64,8 @@
         {
           "range": {
             "@timestamp": {
-              "gte": "2026-10-19T15:00:00Z",
-              "lte": "2026-10-19T15:40:00Z"
+              "gte": "2026-10-26T10:00:00Z",
+              "lte": "2026-10-26T11:00:00Z"
             }
           }
         }
@@ -83,24 +80,24 @@
 
 ## STEP-BY-STEP INVESTIGATION CHECKLIST
 
-1. **Verify Entra ID Sign-In & Device Registration Context:** Target: Entra Sign-In Logs.
-Filter sign-in logs for user `CLIENT\A12345` around `19/10/2026 15:20 UTC` originating from IP `82.34.244.83`. Check whether the device registered successfully and note the device trust state.
-*Verification:* Confirm the appearance of an interactive sign-in event mapping to `Pixel_8A` with a success status code.
+1. **Inspect Authentication and MFA Method Context:** Target: Entra Sign-In Logs.
+Filter Entra ID sign-in logs for user `CLIENT\A12345` around `26/10/2026 10:28 UTC` to identify successful token grants and verify whether passkey/FIDO2 authentication was leveraged.
+*Verification:* Confirm authentication success status and check the authentication method details logged during the session.
 
 
-2. **Audit Intune Enrollment Platform Restrictions:** Target: Intune Device Platform Restrictions.
-Inspect the active Android Enterprise device platform restriction profile in the Intune portal to check if OS version boundaries permitted Android 14.
-*Verification:* Document the exact minimum and maximum version parameters configured in the active policy assignment.
+2. **Audit Device Compliance and Restriction Policies:** Target: Intune Device Configuration.
+Review active Intune device configuration profiles to check if restrictions prevent biometric sharing or if local OS modifications are unmanaged under the BYOD framework.
+*Verification:* Document whether any policy specifically targets biometric limits or if management is restricted to work-profile container boundaries.
 
 
-3. **Correlate Network Activity via Splunk:** Target: Splunk Enterprise Logs.
-Search corporate proxy and perimeter logs for connections from IP `82.34.244.83` to validate session characteristics during the enrollment window.
-*Verification:* Cross-reference HTTP headers and user-agent strings against known Microsoft Company Portal application signatures.
+3. **Correlate Network and Session Activity:** Target: Splunk Identity Logs.
+Query Splunk for network events originating from IP `82.34.244.83` during the target timeframe to ensure no anomalous external IPs or impossible travel indicators accompanied the authentication.
+*Verification:* Confirm that sign-in IP matches expected baseline or corporate network parameters.
 
 
 4. **Record Telemetry and Visibility Gaps in Jira:** Target: Jira Incident Ticket.
-Review findings against the environment constraint that local device logs and Mobile Threat Defense telemetry are absent. Note in the Jira ticket that low-level OS installation mechanics and exploit artifacts are invisible due to BYOD privacy boundaries.
-*Verification:* Verify that the Jira comment explicitly states: *"Local device installation logs, debug outputs, and kernel telemetry are unavailable due to BYOD architecture limitations."*
+Document in the Jira ticket that local biometric registration (adding multiple fingerprints inside Android OS settings) generates zero logs in Entra, Intune, Splunk, or Defender due to BYOD privacy constraints.
+*Verification:* Verify that the Jira comment explicitly states: *"Local OS biometric configuration changes are not captured by cloud or SIEM telemetry because Android does not stream local fingerprint enrollment events to management consoles."*
 
 
 ---
@@ -108,77 +105,27 @@ Review findings against the environment constraint that local device logs and Mo
 ## SPLUNK HUNTING QUERIES
 
 ```splunk
-index=entra_audit user="A12345" OR ip="82.34.244.83" 
+index=entra_signins user="A12345" OR ip="82.34.244.83" 
 | eval timestamp=strftime(_time, "%d/%m/%Y %H:%M UTC") 
-| table timestamp, user, ip, action, result, clientAppUsed, deviceDisplayName, os 
+| table timestamp, user, ip, appDisplayName, conditionalAccessStatus, status, authenticationMethod 
 | sort - _time
 
 ```
 
 ---
 
-### Technical Note on Why the Device Was Not Blocked Pre-Installation During Enrollment
+### Technical Note on Why the Device Did Not Delete Pre-Installed Data / Configurations During Enrollment
 
-When an Android BYOD device (such as the Pixel 8a running Android 14) successfully enrolls despite policy intent, it is typically driven by one of the following architectural root causes within Microsoft Intune:
+When a BYOD device (such as the Pixel 8a) is enrolled into Microsoft Intune via a **Personally-owned work profile** deployment, existing device data, user settings, and local configurations are **intentionally preserved**:
 
-1. **Misconfigured or Default OS Version Boundaries:** The active *Device Platform Restriction* policy assigned to the user group had its **Minimum OS Version** set to a value equal to or lower than Android 14 (e.g., set to `12.0` or `13.0` rather than a stricter or higher baseline), or the restriction was left at default factory baselines which do not proactively exclude newer major OS releases. Intune evaluates version numbers strictly against the configured integer/decimal range; if the target OS falls within the allowed minimum-to-maximum bracket, enrollment proceeds successfully.
-2. **Policy Scope or Priority Conflict:** A broader default policy with lower security stringency took precedence over a restrictive custom policy due to assignment priority ordering or incorrect user group targeting, allowing the enrollment engine to validate and accept the device identity token.
+1. **Work Profile Architecture vs. Full Wipe:** Unlike corporate-owned fully managed devices (where a factory reset and complete wipe occur during provisioning), BYOD work profile enrolment creates an isolated, encrypted logical container for corporate apps and data. Personal settings, existing operating system configurations, and local hardware features—including pre-registered user fingerprints or lock screen credentials—remain untouched to respect user privacy and data ownership.
+2. **Design Limits of Local Biometrics:** Stock Android and mobile operating systems treat biometric hardware templates (fingerprints or face unlock models) at the OS/hardware abstraction layer (TEE / Secure Enclave). Enrolling a work profile manages enterprise policy within the work container but does not wipe or restrict personal OS-level biometric settings unless specialized, high-privilege device restriction policies or OEM-specific management frameworks are enforced.
 
 
-When it comes to **Advanced Hunting in Microsoft Defender XDR using KQL (Kusto Query Language)**, there is a critical constraint given your environment setup:
-
-> **Important Architecture Constraint:** Advanced Hunting tables (such as `DeviceEvents`, `DeviceInfo`, `DeviceFileEvents`, etc.) **only populate if Microsoft Defender for Endpoint (MDE) sensors are actively deployed and running on the endpoint.** Because these corporate BYOD mobile devices have *no* MDE or Mobile Threat Defense installed, running device-level KQL queries in the Defender portal will return **zero results** for this device.
-
-However, if you want to query what *is* captured by Microsoft 365 (via Entra ID sign-ins and audit telemetry ingested into Defender XDR/Log Analytics workspaces), you can use identity-centric KQL tables like `SigninLogs` and `AuditLogs`.
-
----
-
-### Alternative KQL Queries (Identity & Enrollment Focus)
-
-Since device telemetry tables (`DeviceInfo`) will be empty for `Pixel_8A`, use these identity-focused KQL queries in Microsoft Defender Advanced Hunting or Microsoft Sentinel to track the user activity and sign-in context:
-
-#### 1. Correlating User Sign-Ins and Device Registration Context
-
-This query checks Microsoft Entra sign-in events for user `A12345` around the incident timestamp to see how the device authenticated and whether it was tagged as compliant or registered during the passkey workflow.
-
-```kusto
-SigninLogs
-| where TimeGenerated between (ago(7d) .. now())
-| where UserPrincipalName has "A12345" or UserId has "A12345"
-| project TimeGenerated, UserPrincipalName, IPAddress, DeviceDetail, ConditionalAccessStatus, Status, ResultDescription
-| sort by TimeGenerated desc
-
-```
-
-#### 2. Tracking Intune Audit and Enrollment Configuration Changes
-
-To check if policy rules or device enrollment restrictions were modified around the time of the event, query the audit logs:
-
-```kusto
-AuditLogs
-| where TimeGenerated between (ago(7d) .. now())
-| where OperationName has_any ("Device", "Enrollment", "Restriction", "Policy")
-| where InitiatedBy has "A12345" or TargetResources has "A12345"
-| project TimeGenerated, OperationName, InitiatedBy, TargetResources, Result
-| sort by TimeGenerated desc
-
-```
-
----
-
-### Jira Documentation Note
-
-When completing your incident report, document the Advanced Hunting limitation explicitly:
-
-* *"KQL queries against MDE tables (`DeviceInfo`, `DeviceEvents`) returned 0 results due to the absence of Defender for Mobile Endpoint on the BYOD asset (`Pixel_8A`). Investigation was restricted to identity-layer Entra logs (`SigninLogs`)."*
-
-Here is a concise, ready-to-paste closing comment tailored for your Jira ticket:
-
-> **Investigation Summary & Closing Note:**
-> Threat hunting and log correlation were conducted across Microsoft Entra ID, Intune, Splunk, and Microsoft Defender XDR for user `CLIENT\A12345` (`Pixel_8A` / `AndroidForWork_12`) originating from IP `82.34.244.83` at `19/10/2026 15:20 UTC`.
-> **Findings:**
-> * **Policy Configuration:** The device successfully enrolled under Android 14 because the active Intune *Device Platform Restriction* profile permitted the OS version range (either due to the minimum/maximum OS boundary settings allowing Android 14 or policy assignment priority).
-> * **Telemetry Limitations:** Because this is a BYOD asset without Microsoft Defender for Endpoint (MDE) or Mobile Threat Defense (MTD) installed, local device telemetry, app installation traces, and MDE KQL tables (`DeviceInfo`, `DeviceEvents`) contained zero endpoint records. Analysis was restricted to cloud identity sign-in and audit logs (`SigninLogs`, `AuditLogs`, and Splunk authentication streams).
+> **Investigation Closing & Telemetry Statement:**
+> Pursuant to the technical architecture of Android Enterprise Personally-Owned Work Profile deployments and corporate Bring Your Own Device (BYOD) governance frameworks, zero telemetry or audit logs will be generated or captured across cloud management consoles (Microsoft Entra ID, Intune), SIEM platforms (Splunk), or endpoint security portals (Microsoft Defender XDR) regarding local OS-level actions such as biometric template modifications.
+> **Official Research & Architectural Constraints:**
+> 1. **OS-Level Isolation & Privacy Boundaries:** According to Google's Android Enterprise architecture and [Microsoft Intune Documentation](https://learn.microsoft.com/en-us/intune/device-enrollment/android/enterprise-work-profile), the work profile creates a strictly isolated cryptographic and logical container on personal hardware. Local hardware security features—including Trusted Execution Environment (TEE) biometric enrollments (fingerprints or face models)—reside entirely within the personal OS layer and are bound by strict operating system privacy frameworks that prevent management controllers from inspecting or logging local credential configurations.
+> 2. **Absence of Endpoint Sensors:** As established in [Microsoft Defender for Endpoint on Android Privacy Guidelines](https://learn.microsoft.com/en-us/defender-endpoint/android-privacy), telemetry collection requires an active MDE or Mobile Threat Defense sensor deployed on the target asset. In a BYOD model lacking MDE and local log forwarding, advanced hunting schemas (`DeviceEvents`, `DeviceInfo`) and SIEM ingestion pipelines remain completely unpopulated. Consequently, local setting adjustments leave no network footprints, API audit events, or security telemetry trails for downstream correlation.
 > 
-> 
-> **Disposition:** Confirmed expected behavior based on current Intune enrollment configuration boundaries. No indicators of external compromise or anomalous post-enrollment activity were identified in identity logs. Closing ticket and recommending review of Intune Android Enterprise platform restriction baselines if Android 14 is intended to be blocked for MFA Passkey onboarding.
+>
